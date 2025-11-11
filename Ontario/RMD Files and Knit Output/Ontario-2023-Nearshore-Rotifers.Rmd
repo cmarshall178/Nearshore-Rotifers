@@ -1,0 +1,522 @@
+---
+title: "Ontario 2023 Nearshore Rotifers"
+author: "Chris Marshall"
+date: "`r Sys.Date()`"
+output: 
+  word_document: 
+    fig_width: 12
+    fig_height: 8
+    fig_caption: true
+    keep_md: true
+  pdf_document: default
+editor_options:
+  chunk_output_type: console
+---
+
+```{r Project Setup and Library Loading, include=FALSE}
+knitr::opts_chunk$set(
+	message = FALSE,
+	warning = FALSE,
+	echo = FALSE
+)
+library(knitr)
+library(tinytex)
+library(tidyverse, warn.conflicts = FALSE)
+library(readxl)
+library(dplyr)
+library(cowplot)
+library(ggpubr)
+library(rstatix)
+library(lme4)
+library(lmerTest)
+library(WRS2)
+library(performance)
+library(lubridate)
+library(car)
+library(broom)
+library(ggtext)
+library(onewaytests)
+library(nlme)
+library(ggthemes)
+library(ggThemeAssist)
+library(ggplot2)
+library(ggbreak)
+library(patchwork)
+library(FSA)
+library(dplyr)
+library(ggsci)
+library(ggpattern)
+library(scales)
+library(ggridges)
+library(mgcv)
+library(rnaturalearth)
+library(rnaturalearthdata)
+library(sf)
+library(ggspatial)
+library(googleway)
+library(ggrepel)
+library(maps)
+library(mapdata)
+library(emmeans)
+```
+
+```{r Dataframe Importing; Ontario 2023 D20 counts and sample metadata, message=FALSE, warning=FALSE, include=FALSE}
+Ontario_2023_D20_Counts <- read_excel("C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Nearshore Rotifers/Ontario/Raw Data/Ontario 2023 D20 for Chris Oct 8.xlsx",
+        sheet = "D20 cnt") %>%
+          mutate("Type" = "OS")
+Ontario_2023_D20_Sample <- read_excel("C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Nearshore Rotifers/Ontario/Raw Data/Ontario 2023 D20 for Chris Oct 8.xlsx",
+        sheet = "D20 sample")
+
+# Ontario 2023 Nearshore counts and sample metadata
+Ontario_2023_Nearshore_Counts <- read_excel("C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Nearshore Rotifers/Ontario/Raw Data/Ontario 2023 NS for Chris Oct 8.xlsx",
+        sheet = "NS cnt") %>%
+          mutate("Type" = "NS")
+Ontario_2023_Nearshore_Sample <- read_excel("C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Nearshore Rotifers/Ontario/Raw Data/Ontario 2023 NS for Chris Oct 8.xlsx",
+        sheet = "NS sample")
+```
+
+```{r Rotifer Data Tidying, echo=FALSE, message=FALSE, warning=FALSE, include=FALSE}
+#Combine Offshore (OS) and Nearshore (NS) count datasets
+Ontario_2023_Full_Data <- full_join(Ontario_2023_D20_Counts, Ontario_2023_Nearshore_Counts, copy = F)
+
+# Combine Offshore (OS) and Nearshore (NS) sample metadata 
+Ontario_2023_Meta_Join <- full_join(Ontario_2023_D20_Sample, Ontario_2023_Nearshore_Sample, copy = F)
+
+# Combine Offshore (OS) and Nearshore (NS) count and metadata sets together
+Ontario_2023_Joined <- Ontario_2023_Full_Data %>%
+  left_join(select(Ontario_2023_Meta_Join, "Station", "Basin", "D or N", "Site Depth", "Lat", "Lon"), by = "Station")
+
+write_csv(Ontario_2023_Joined, file = "C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Nearshore Rotifers/Ontario/Processed Data/Ontario_2023_Joined.csv")
+
+#Summarise count data and complete with implicit zeros for each Speccode; fill group and type columns with appropriate metadata
+Ontario_2023_Complete <- Ontario_2023_Joined %>%
+    group_by(Speccode, Station, Group, Type, Basin, `D or N`, `Site Depth`, Lat, Lon) %>%
+    summarise(Zoop_Bio_Sum_m3 = sum(`Biomass mg m3`), Zoop_Den_Sum_m3 = sum(Density), Zoop_Bio_Sum_m2 = sum(`Areal Bio g`)) %>%
+    ungroup %>%
+    complete(Speccode, nesting(Station), fill = list(Zoop_Bio_Sum_m3 = 0, Zoop_Den_Sum_m3 = 0, Zoop_Bio_Sum_m2 = 0)) %>%
+    group_by(Speccode) %>%
+    fill(Group, .direction = "downup") %>%
+    ungroup() %>%
+    group_by(Station) %>%
+    fill(Type, Basin, `D or N`, `Site Depth`, Lat, Lon, .direction = "downup") %>%
+    ungroup()
+```
+
+```{r Rotifer Genera For Loop, echo=FALSE, message=FALSE, warning=FALSE, include=FALSE}
+
+# For Loop setup for Rotifer Genera column
+Speccode <- Ontario_2023_Complete$Speccode
+GENUS_Length <- length(Speccode)
+Rot_GENERA <- rep("NA", GENUS_Length)
+  for(x in 1:GENUS_Length){
+      if (Speccode[x] == "ASCOVAL" || Speccode[x] == "ASCECAU") {
+      Rot_GENERA[x] <- "Ascomorpha"
+        } else if (Speccode[x] == "ASPHERR" || Speccode[x] == "ASPPRIO") {
+        Rot_GENERA[x] <- "Asplanchna"
+          } else if (Speccode[x] == "COLSP") {
+          Rot_GENERA[x] <- "Collotheca"
+            } else if (Speccode[x] == "COOUNIC") {
+            Rot_GENERA[x] <- "Conochilus"
+              } else if (Speccode[x] == "GASSTYL") {
+              Rot_GENERA[x] <- "Gastropus"
+              } else if (Speccode[x] == "KELLONG") {
+                Rot_GENERA[x] <- "Kellicottia"
+                } else if (Speccode[x] == "KERCOCH" || Speccode[x] == "KEREARL" || Speccode[x] == "KERCRAS" || Speccode[x] == "KERCOCHH" || Speccode[x] == "KERQUAD") {
+                  Rot_GENERA[x] <- "Keratella"
+                  } else if (Speccode[x] == "PLOHUDS" || Speccode[x] == "PLOTRUN" || Speccode[x] == "PLOLENT") {
+                    Rot_GENERA[x] <- "Ploesoma"
+                    } else if (Speccode[x] == "POLREMA" || Speccode[x] == "POLVULG" || Speccode[x] == "POLSP") {
+                      Rot_GENERA[x] <- "Polyarthra"
+                      } else if (Speccode[x] == "TRIMULT" || Speccode[x] == "TRIPUSI" || Speccode[x] == "TRISP" || Speccode[x] == "TRICYLI") {
+                        Rot_GENERA[x] <- "Trichocerca"
+                        } else if (Speccode[x] == "SYNSP") {
+                          Rot_GENERA[x] <- "Synchaeta"}
+  }
+
+# Binding the Rot_GENERA variable created with for loop as a column to the original dataframe
+Ontario_2023_Complete <- cbind(Ontario_2023_Complete, Rot_GENERA)
+
+write_csv(Ontario_2023_Complete, file = "C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Nearshore Rotifers/Ontario/Processed Data//Ontario_2023_Complete.csv")
+
+```
+
+```{r Zoop and Rotifer Data Summaries, echo=FALSE, message=FALSE, warning=FALSE, include=FALSE}
+
+# Summarize all zoop and rotifer volumetric data by SPECCODE,
+All_Speccode_Sum_Stats <- Ontario_2023_Complete %>%
+    #filter(CRUISE_DECODE == "Spring") %>%
+    group_by(Speccode, Group, Type) %>%
+      summarise(All_Bio_SUM_m3 = sum(Zoop_Bio_Sum_m3),
+      All_Den_SUM_m3 = sum(Zoop_Den_Sum_m3),
+      All_Bio_SUM_m2 = sum(Zoop_Bio_Sum_m2),
+      All_Bio_MEAN_m3 = mean(Zoop_Bio_Sum_m3),
+      All_Den_MEAN_m3 = mean(Zoop_Den_Sum_m3),
+      All_Bio_MEAN_m2 = sum(Zoop_Bio_Sum_m2),
+      All_Bio_SD_m3 = sd(Zoop_Bio_Sum_m3),
+      All_Den_SD_m3 = sd(Zoop_Den_Sum_m3),
+      All_Bio_SD_m2 = sum(Zoop_Bio_Sum_m2),
+      N = n(),
+      All_Bio_SE_m3 = All_Bio_SD_m3 / sqrt(N),
+      All_Den_SE_m3 = All_Den_SD_m3 / sqrt(N),
+      All_Bio_SE_m2 = All_Bio_SD_m2 / sqrt(N))
+
+write_csv(All_Speccode_Sum_Stats, file = "C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Nearshore Rotifers/Ontario/Processed Data/All_Speccode_Sum_Stats.csv")
+
+# Summarize rotifer volumetric data by SPECCODE
+Rot_Speccode_Sum_Stats <- Ontario_2023_Complete %>%
+  filter(Group == "ROT") %>%
+  group_by(Speccode, Type) %>%
+    summarise(All_Bio_SUM_m3 = sum(Zoop_Bio_Sum_m3),
+    All_Den_SUM_m3 = sum(Zoop_Den_Sum_m3),
+    All_Bio_SUM_m2 = sum(Zoop_Bio_Sum_m2),
+    All_Bio_MEAN_m3 = mean(Zoop_Bio_Sum_m3),
+    All_Den_MEAN_m3 = mean(Zoop_Den_Sum_m3),
+    All_Bio_MEAN_m2 = sum(Zoop_Bio_Sum_m2),
+    All_Bio_SD_m3 = sd(Zoop_Bio_Sum_m3),
+    All_Den_SD_m3 = sd(Zoop_Den_Sum_m3),
+    All_Bio_SD_m2 = sum(Zoop_Bio_Sum_m2),
+    N = n(),
+    All_Bio_SE_m3 = All_Bio_SD_m3 / sqrt(N),
+    All_Den_SE_m3 = All_Den_SD_m3 / sqrt(N),
+    All_Bio_SE_m2 = All_Bio_SD_m2 / sqrt(N))
+
+write_csv(Rot_Speccode_Sum_Stats, file = "C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Nearshore Rotifers/Ontario/Processed Data/Rot_Speccode_Sum_Stats.csv")
+
+# Summarize rotifer volumetric data by Rot_GENERA
+Rot_Genera_Sum_Stats <- Ontario_2023_Complete %>%
+  filter(Group == "ROT") %>%
+  group_by(Rot_GENERA, Type) %>%
+    summarise(All_Bio_SUM_m3 = sum(Zoop_Bio_Sum_m3),
+    All_Den_SUM_m3 = sum(Zoop_Den_Sum_m3),
+    All_Bio_SUM_m2 = sum(Zoop_Bio_Sum_m2),
+    All_Bio_MEAN_m3 = mean(Zoop_Bio_Sum_m3),
+    All_Den_MEAN_m3 = mean(Zoop_Den_Sum_m3),
+    All_Bio_MEAN_m2 = sum(Zoop_Bio_Sum_m2),
+    All_Bio_SD_m3 = sd(Zoop_Bio_Sum_m3),
+    All_Den_SD_m3 = sd(Zoop_Den_Sum_m3),
+    All_Bio_SD_m2 = sum(Zoop_Bio_Sum_m2),
+    N = n(),
+    All_Bio_SE_m3 = All_Bio_SD_m3 / sqrt(N),
+    All_Den_SE_m3 = All_Den_SD_m3 / sqrt(N),
+    All_Bio_SE_m2 = All_Bio_SD_m2 / sqrt(N))
+
+write_csv(Rot_Genera_Sum_Stats, file = "C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Nearshore Rotifers/Ontario/Processed Data/Rot_Genera_Sum_Stats.csv")
+
+# Summarize all rotifer volumetric data by Rot_GENERA for Stations
+Rotifer_Full_Stations <- Ontario_2023_Complete %>%
+  filter(Group == "ROT") %>%
+  group_by(Rot_GENERA, Station, Type) %>%
+    summarise(All_Bio_SUM_m3 = sum(Zoop_Bio_Sum_m3),
+    All_Den_SUM_m3 = sum(Zoop_Den_Sum_m3),
+    All_Bio_SUM_m2 = sum(Zoop_Bio_Sum_m2),
+    All_Bio_MEAN_m3 = mean(Zoop_Bio_Sum_m3),
+    All_Den_MEAN_m3 = mean(Zoop_Den_Sum_m3),
+    All_Bio_MEAN_m2 = sum(Zoop_Bio_Sum_m2),
+    All_Bio_SD_m3 = sd(Zoop_Bio_Sum_m3),
+    All_Den_SD_m3 = sd(Zoop_Den_Sum_m3),
+    All_Bio_SD_m2 = sum(Zoop_Bio_Sum_m2),
+    N = n(),
+    All_Bio_SE_m3 = All_Bio_SD_m3 / sqrt(N),
+    All_Den_SE_m3 = All_Den_SD_m3 / sqrt(N),
+    All_Bio_SE_m2 = All_Bio_SD_m2 / sqrt(N))
+
+write_csv(Rotifer_Full_Stations, file = "C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Nearshore Rotifers/Ontario/Processed Data/Rotifer_Full_Stations.csv")
+
+#We used an Analysis of Variance (ANOVA) approach to determine whether there were significant differences of the means of the four groups in terms of overall biomass.  Welch’s t-tests were then run for comparison of each group considering different sample sizes. 
+```
+
+```{r ANOVA and Linear Model Statistics, echo=FALSE, message=FALSE, warning=FALSE, include=FALSE}
+
+#Fit the Linear Mixed Model with lmer()
+Rotifer_Bio_Station <- Ontario_2023_Complete %>% 
+  filter(Group == "ROT") %>%
+  group_by(Station, Rot_GENERA, Type) %>%
+    summarise(All_Bio_SUM_m3 = sum(Zoop_Bio_Sum_m3),
+    All_Den_SUM_m3 = sum(Zoop_Den_Sum_m3)) 
+
+#Identify data outliers for biomass and density
+Complete_Rotifer_Outliers <- Rotifer_Bio_Station %>%
+  group_by(Rot_GENERA, Type) %>%
+  mutate(
+    #Density outlier detection
+    Q1_Density = quantile(All_Den_SUM_m3, 0.25),
+    Q3_Density = quantile(All_Den_SUM_m3, 0.75),
+    IQR_Density = Q3_Density - Q1_Density,
+    is_outlier_Density = All_Den_SUM_m3 < (Q1_Density - 3 * IQR_Density) | All_Den_SUM_m3 > (Q3_Density + 3 * IQR_Density),
+    #Biomass outlier detection
+    Q1_Biomass = quantile(All_Bio_SUM_m3, 0.25),
+    Q3_Biomass = quantile(All_Bio_SUM_m3, 0.75),
+    IQR_Biomass = Q3_Biomass - Q1_Biomass,
+    is_outlier_Biomass = All_Bio_SUM_m3 < (Q1_Biomass - 3 * IQR_Biomass) | All_Bio_SUM_m3 > (Q3_Biomass + 3 * IQR_Biomass),
+  ) %>%
+  ungroup()
+
+#Remove outliers prior to visualizations and statistical analyses ***** May be removing too much resolution
+Complete_Rotifer_Outliers <- Complete_Rotifer_Outliers %>%
+  filter(!is_outlier_Density & !is_outlier_Biomass) %>%
+  select(-starts_with("Q1"), -starts_with("Q3"), -starts_with("IQR"), -is_outlier_Density, -is_outlier_Biomass)
+
+# save model
+Rotifer_Bio_ANOVA <- aov(rank(All_Bio_SUM_m3) ~ Type + Rot_GENERA,
+  data = Complete_Rotifer_Outliers,
+  contrasts = list(
+    Type = "contr.sum",
+    Rot_GENERA = "contr.sum"
+  )
+)
+Anova(Rotifer_Bio_ANOVA, type = "3")
+
+plot(Rotifer_Bio_ANOVA, which = 2)
+hist(Rotifer_Bio_ANOVA$residuals)
+plot(Rotifer_Bio_ANOVA, which = 3)
+ggqqplot(resid(Rotifer_Bio_ANOVA))
+
+shapiro_test(resid(Rotifer_Bio_ANOVA))
+moments::skewness(resid(Rotifer_Bio_ANOVA))
+tapply(Complete_Rotifer_Outliers$All_Bio_SUM_m3, Complete_Rotifer_Outliers$Type, FUN = var)
+
+Rotifer_Bio_ANOVA_EMM <- emmeans(Rotifer_Bio_ANOVA, pairwise ~ Type + Rot_GENERA)
+Rotifer_Bio_ANOVA_EMM_regridded <- regrid(Rotifer_Bio_ANOVA_EMM, transform = "response")
+contrast(Rotifer_Bio_ANOVA_EMM_regridded, method = "pairwise")
+
+Rotifer_Bio_ANOVA_EMM_Category <- emmeans(Rotifer_Bio_ANOVA, ~ Type + Rot_GENERA)
+print(Rotifer_Bio_ANOVA_EMM_Category)
+
+Rotifer_Bio_ANOVA_EMM_Category %>% 
+  pairs() %>% 
+  test(joint = TRUE)
+pairs(Rotifer_Bio_ANOVA_EMM_Category)
+ 
+
+# Fit linear mixed effect model; Use these p values and results - Collotheca only significant
+Rotifer_Bio_LMM <- lmer(
+  rank(All_Bio_SUM_m3) ~ Rot_GENERA * Type +        # Fixed effects: Rot_GENERA, Type
+  (1 | Station),                                    # Random effects: Stations
+  data = Complete_Rotifer_Outliers, REML = TRUE,
+)
+
+summary(Rotifer_Bio_LMM)
+anova(Rotifer_Bio_LMM, type = 3)
+
+# Compute estimated marginal means
+Rotifer_Bio_emmeans <- emmeans(Rotifer_Bio_LMM, ~ Type | Rot_GENERA)  # Compare genera among type 
+
+#Games-Howell Post-Hoc Test for unequal variances and sample sizes
+
+# Tukey-adjusted pairwise comparisons
+Rotifer_Bio_tukey <- contrast(Rotifer_Bio_emmeans, method = "pairwise", adjust = "tukey")
+
+# View results
+summary(Rotifer_Bio_tukey)
+kable(anova(Rotifer_Bio_LMM, type = 3))
+kable(Rotifer_Bio_tukey)
+```
+
+## Rotifer Species Offshore-Nearshore Biomass Barplot
+
+```{r OS-NS Rotifer Species Average Biomass, fig.cap="Figure X1. Rotifer species offshore (OS) vs. nearshore (NS) average biomass (mg dry wt per m^3^). Error bars represent standard errors of the means. Taxa groups are identified in legend by color.", fig.height=8, fig.width=12}
+
+# Ordering of Rot_GENERA column
+#Rot_Speccode_Sum_Stats$Speccode <- factor(Rot_Speccode_Sum_Stats$Speccode, levels = c("ASCECAU", "ASCOVAL", "ASPHERR", "ASPPRIO", "COLSP", "COOUNIC", "GASSTYL", "KELLONG", "KERCOCH", "KERCOCHH", "KERCRAS", "KEREARL", "KERQUAD", "PLOHUDS", "PLOLENT", "PLOTRUN", "POLREMA", "POLSP", "POLVULG", "SYNSP", "TRICYLI", "TRIMULT", "TRIPUSI", "TRISP"))
+# Ordering of Rot_Speccode column
+
+Rot_Speccode_Sum_Stats$Speccode <- factor(Rot_Speccode_Sum_Stats$Speccode, levels = c("TRICYLI", "TRIMULT", "TRIPUSI", "TRISP", "POLREMA", "POLSP", "POLVULG", "SYNSP", "ASCECAU", "ASCOVAL", "COOUNIC", "KERCOCH", "KERCOCHH", "KERCRAS", "KEREARL", "KERQUAD", "KELLONG", "PLOHUDS", "PLOLENT", "PLOTRUN", "COLSP", "GASSTYL", "ASPHERR", "ASPPRIO"))
+
+# creating a color palette for rotifer speccode stack graph
+cb_Speccode_Palette <- c("green1", "green2", "green3", "green4", "yellow1","yellow3","yellow4", "red2", "blue3", "navy", "saddlebrown", "magenta1","magenta3","magenta4","purple3","purple4", "cyan3", "orange1", "orange3", "orange4", "mediumaquamarine", "seagreen4", "gray60", "gray40")
+
+# Stacked bar plots of mean biomass of Nearshore and Offshore rotifer Speccode
+gg_NS_OF_BIO_Rot_Speccode <- ggplot(Rot_Speccode_Sum_Stats, aes(x = Type, y = All_Bio_MEAN_m3, fill = Speccode)) +
+    geom_bar(color = "black", stat = "identity") +
+    facet_grid(~Speccode, scales = "free") +
+    geom_errorbar(aes(ymax = All_Bio_MEAN_m3 + All_Bio_SE_m3, ymin = All_Bio_MEAN_m3 - All_Bio_SE_m3), width = .8) +
+    #geom_bar_pattern(aes(pattern_angle = SUMGROUP, pattern_spacing = SUMGROUP), stat = "identity",     color = "black", pattern_colour = "darkgray", pattern_fill = "darkgray", fill = "white") +
+    #panel border, axis text and title sizes and orientations
+    theme_cowplot() +
+      theme(panel.border = element_rect(linetype = "solid"), strip.text = element_text(size = 8, angle = 45, vjust = 0.4, hjust = 0.4, face = "bold"), axis.text.x = element_text(size = 12, face = "bold", angle = 45, vjust = 1, hjust = 1), axis.title.x = element_blank(), axis.text.y = element_text(size = 24, face = "bold"), axis.title.y = element_text(size = 24, face = "bold"), plot.title = element_blank(), plot.background = element_rect(fill='white', color=NA)) +
+      #legend details
+      theme(legend.title = element_blank(), legend.position = "inside", legend.position.inside = c(0.02,0.87), legend.box.background = element_rect(), legend.box.margin = margin(3,3,3,3), legend.text = element_text(size = 18, face = "bold")) +
+  guides(fill=guide_legend(nrow = 5)) +
+#scale_pattern_manual(values = c(SUMG_WWC_Pattern)) +
+#palette color for bar fills; see Barbiero for reference
+scale_fill_manual(values = c(cb_Speccode_Palette)) +
+labs(x = "NS-OS", y = bquote("Volumetric Biomass"~(mg/m^3)))
+
+gg_NS_OF_BIO_Rot_Speccode
+```
+
+This figure X1 isn't a good candidate for the CSMI nearshore report as there are a lot of details here that aren't necessarily relevant. However, it is an interesting look at each of the 24 taxa encountered between the offshore and nearshore communities. The presence of the *Asplanchna* species makes the other taxa details difficult to view in this plot, therefore insights on the greater community are included in the subsequent figure which excludes *Asplanchna*. It is typical for *Asplanchna* to contribute greatly to the overall rotifer community biomass (Marshall et al., 2024), and that is exhibited in this plot. Both species have higher biomass in the offshore waters but these differences are not significant. However, there is a clear biomass difference between the more common *Asplanchna priodonta* compared to the rarer *Asplanchna herricki*.
+
+[References:]{.underline}
+
+Marshall, C.C., Watkins, J.M., Connolly, J.K., Boynton, P.V., Schaefer, S.L., Currie, W.J.S., Rudstam, L.G., 2024. Patterns and drivers of seasonal succession and vertical distribution in the rotifer community of Lake Ontario in 2018. J. Great Lakes Res. 50, 102283. <https://doi.org/10.1016/j.jglr.2024.102283>.
+
+## Rotifer Species Offshore-Nearshore Biomass Barplot Excluding Asplanchna
+
+```{r OS-NS Rotifer Species (No Asplanchna) Average Biomass, fig.cap="Figure X2. Rotifer species (excluding Asplanchna) offshore (OS) vs. nearshore (NS) average biomass (mg dry wt per m^3^). Error bars represent standard errors of the means. Taxa groups are identified in legend by color.", fig.height=8, fig.width=12}
+# Filter out Asplanchna to view other taxa easier
+Rot_Speccode_Sum_Stats_No_Asplanchna <- Rot_Speccode_Sum_Stats %>%  
+  filter(Speccode != "ASPHERR" & Speccode != "ASPPRIO")
+
+Rot_Speccode_Sum_Stats_No_Asplanchna$Speccode <- factor(Rot_Speccode_Sum_Stats_No_Asplanchna$Speccode, levels = c("TRICYLI", "TRIMULT", "TRIPUSI", "TRISP", "POLREMA", "POLSP", "POLVULG", "SYNSP", "ASCECAU", "ASCOVAL", "COOUNIC", "KERCOCH", "KERCOCHH", "KERCRAS", "KEREARL", "KERQUAD", "KELLONG", "PLOHUDS", "PLOLENT", "PLOTRUN", "COLSP", "GASSTYL"))
+
+# creating a color palette for rotifer speccode stack graph
+cb_Speccode_Palette_No_Asplanchna <- c("green1", "green2", "green3", "green4", "yellow1","yellow3","yellow4", "red2", "blue3", "navy", "saddlebrown", "magenta1","magenta3","magenta4","purple3","purple4", "cyan3", "orange1", "orange3", "orange4", "mediumaquamarine", "seagreen4")
+
+# Stacked bar plots of mean biomass of Nearshore and Offshore rotifer Speccode
+gg_NS_OF_BIO_Rot_Speccode_No_Asplanchna <- ggplot(Rot_Speccode_Sum_Stats_No_Asplanchna, aes(x = Type, y = All_Bio_MEAN_m3, fill = Speccode)) +
+    geom_bar(color = "black", stat = "identity") +
+    facet_grid(~Speccode, scales = "free") +
+    geom_errorbar(aes(ymax = All_Bio_MEAN_m3 + All_Bio_SE_m3, ymin = All_Bio_MEAN_m3 - All_Bio_SE_m3), width = .8) +
+    #geom_bar_pattern(aes(pattern_angle = SUMGROUP, pattern_spacing = SUMGROUP), stat = "identity",     color = "black", pattern_colour = "darkgray", pattern_fill = "darkgray", fill = "white") +
+    #panel border, axis text and title sizes and orientations
+    theme_cowplot() +
+      theme(panel.border = element_rect(linetype = "solid"), strip.text = element_text(size = 8, angle = 45, vjust = 0.4, hjust = 0.4, face = "bold"), axis.text.x = element_text(size = 12, face = "bold", angle = 45, vjust = 1, hjust = 1), axis.title.x = element_blank(), axis.text.y = element_text(size = 24, face = "bold"), axis.title.y = element_text(size = 24, face = "bold"), plot.title = element_blank(), plot.background = element_rect(fill='white', color=NA)) +
+      #legend details
+      theme(legend.title = element_blank(), legend.position = "inside", legend.position.inside = c(0.02,0.85), legend.box.background = element_rect(), legend.box.margin = margin(3,3,3,3), legend.text = element_text(size = 16, face = "bold")) +
+  guides(fill=guide_legend(nrow = 8)) +
+#scale_pattern_manual(values = c(SUMG_WWC_Pattern)) +
+#palette color for bar fills; see Barbiero for reference
+scale_fill_manual(values = c(cb_Speccode_Palette_No_Asplanchna)) +
+labs(x = "NS-OS", y = bquote("Volumetric Biomass"~(mg/m^3)))
+
+gg_NS_OF_BIO_Rot_Speccode_No_Asplanchna
+```
+
+This Figure X2 shows a closer look at each of the 22 taxa (excluding *Asplanchna*) encountered between the nearshore and offshore samples. *Trichocera pusilla* was the only taxa not found in both offshore and nearshore samples, having only been identified in the offshore, which highlights how rare it is to encounter. The three remaining *Trichocerca* species have a higher biomass in the nearshore vs. offshore, but not significantly different. This is likely related to the higher nutrient concentrations found in the nearshore waters supporting a higher density of these eutrophic-loving taxa (Gannon and Stemberger 1978; Sládecek, 1983). *Polyarthra remata* has a slightly higher nearshore biomass, and *Polyarthra vulgaris* has a significantly higher offshore biomass. It should be noted that *P. vulgaris* identifications are based on a feature (lateral fin) that is often difficult to view using our methods, and densities may be higher than is represented. *P. vulgaris* are considered a eurytopic taxa and are historically dominant in Lake Ontario, making them an important part of the rotifer community (Marshall et al., 2024). Most *Keratella* species showed higher biomass in the offshore but not a significant level of difference. *Keratella cochlearis* are considered a common eurytopic species which promotes their similar offshore-nearshore communities, while the larger more uncommon *Keratella quadrata* has a higher biomass in the offshore waters. *Ploesoma hudsoni*, the largest species in the genus, had slightly higher biomass in the offshore waters, while the smaller *Ploesoma lenticulare* and *Ploesoma truncatum* had significantly higher and nearly identical biomass values, respectively.
+
+[References:]{.underline}
+
+Gannon, J.E., Stemberger, R.S., 1978. Zooplankton (especially crustaceans and rotifers) as indicators of water quality. Trans. Am. Microsc. Soc. 97, 16–35.
+
+Sládecek, V., 1983. Rotifers as indicators of water quality. Hydrobiologia 100, 169–171.
+
+Marshall, C.C., Watkins, J.M., Connolly, J.K., Boynton, P.V., Schaefer, S.L., Currie, W.J.S., Rudstam, L.G., 2024. Patterns and drivers of seasonal succession and vertical distribution in the rotifer community of Lake Ontario in 2018. J. Great Lakes Res. 50, 102283. <https://doi.org/10.1016/j.jglr.2024.102283>.
+
+## Rotifer Genera Offshore-Nearshore Biomass Barplot
+
+```{r OS-NS Rotifer Genera Average Biomass, fig.cap="Figure 1. Rotifer genera offshore (OS) vs. nearshore (NS) average biomass (mg dry wt per m^3^). Error bars represent standard errors of the means. Taxa groups are identified in legend by color.", fig.height=8, fig.width=12}
+
+# Ordering of Rot_GENERA column
+Rot_Genera_Sum_Stats$Rot_GENERA <- factor(Rot_Genera_Sum_Stats$Rot_GENERA, levels = c("Trichocerca", "Polyarthra", "Synchaeta", "Ascomorpha", "Conochilus", "Keratella", "Kellicottia", "Ploesoma", "Collotheca", "Gastropus", "Asplanchna"))
+
+# creating a color palette for rotifer genera stack graph
+cb_Rot_GENERA_Palette <- c("green2", "yellow2", "red2", "navy", "saddlebrown", "magenta3", "cyan3", "orange3", "mediumaquamarine", "seagreen4", "gray60")
+
+# Stacked bar plots of mean biomass of Nearshore and Offshore rotifer Rot_GENERA
+gg_NS_OF_BIO_Rot_Genera <- ggplot(Rot_Genera_Sum_Stats, aes(x = Type, y = All_Bio_MEAN_m3, fill = Rot_GENERA)) +
+    geom_bar(color = "black", stat = "identity") +
+    facet_grid(~Rot_GENERA, scales = "free") +
+    geom_errorbar(aes(ymax = All_Bio_MEAN_m3 + All_Bio_SE_m3, ymin = All_Bio_MEAN_m3 - All_Bio_SE_m3), width = .8) +
+#geom_bar_pattern(aes(pattern_angle = SUMGROUP, pattern_spacing = SUMGROUP), stat = "identity", color = "black", pattern_colour = "darkgray", pattern_fill = "darkgray", fill = "white") +
+#panel border, axis text and title sizes and orientations
+    theme_cowplot() +
+      theme(panel.border = element_rect(linetype = "solid"), strip.text = element_text(size = 12, face = "bold"), axis.text.x = element_text(size = 14, face = "bold", angle = 45, vjust = 1, hjust = 1), axis.title.x = element_blank(), axis.text.y = element_text(size = 24, face = "bold"), axis.title.y = element_text(size = 24, face = "bold"), plot.title = element_blank(), plot.background = element_rect(fill = 'white', color = NA)) +
+#legend details
+      theme(legend.title = element_blank(), legend.position = "inside", legend.position.inside = c(0.02,0.85), legend.box.background = element_rect(), legend.box.margin = margin(3,3,3,3), legend.text = element_text(size = 20, face = "bold")) +
+      guides(fill=guide_legend(nrow = 6)) +
+#scale_pattern_manual(values = c(SUMG_WWC_Pattern)) +
+#palette color for bar fills; see Barbiero for reference
+      scale_fill_manual(values = c(cb_Rot_GENERA_Palette)) +
+      labs(x = "NS-OS", y = bquote("Volumetric Biomass"~(mg/m^3)))
+
+gg_NS_OF_BIO_Rot_Genera
+```
+
+This Figure 1 shows a focused look at the 11 taxa encountered between the nearshore and offshore samples for Lake Ontario in August 2023. With several exceptions, most rotifer taxa exhibited higher average biomass values in the offshore samples, suggesting that these waters supported higher densities and perhaps larger taxa compared to shallower habitats. One exception to this were *Trichocerca*, which had a higher biomass in the nearshore vs. offshore, and can be attributed to the higher nutrient concentrations found in nearshore waters supporting a greater density of these eutrophic-loving taxa (Gannon and Stemberger 1978; Sládecek, 1983). *Gastropus* were the remaining taxa to show a slight preference for the nearshore waters. *Synchaeta* and *Ascomorpha* were taxa that exhibited very similar biomass values between near- and offshore waters. These insights suggest that despite higher food concentrations in nearshore habitats, only several taxa gain a clear advantage in these conditions.
+
+Barbiero and Warren (2011) found that several taxa (*Collotheca*, *Gastropus*, *Conochilus*, *Kellicottia*) all increased in dominance at lower TP concentrations in the Laurentian Great Lakes. Both *Polyarthra* and *Keratella* biomass were higher in the offshore waters indicating more favorable conditions for these taxa despite lower nutrient levels. However, since the introduction of the predatory cladoceran *Cercopagis pengoi* into Lake Ontario in 1998 (MacIsaac et al., 1999), *Polyarthra* and *Keratella* populations have declined as a result of predation pressures (Barbiero and Warren 2011; Makarewicz and Lewis, 2015, Marshall et al., 2024), complicating our understanding of these vulnerable taxa. Three more taxa (*Kellicottia*, *Ploesoma*, and *Asplanchna*) maintained higher biomass in the offshore but were not significantly different from shallower waters, indicating only slightly favorable conditions offshore. The large raptorial *Asplanchna*, which predates on microzooplankton (including rotifers), algae, and ciliates, maintained high biomass contributions in both the nearshore and offshore samples suggesting ample and diverse food resources in both habitats.
+
+Finally, the remaining two taxa, *Collotheca* and *Conochilus*, showed significantly higher biomass in the offshore. *Conochilus* is a soft-bodied rotifer capable of forming large colonies, an effective predation avoidance technique. Extended individuals can reach 450 μm in length (Stemberger, 1979) while colonies can approach 1 mm in size (Haney et al., 2014), leading to high variability in *Conochilus* abundance and biomass. Another introduced predatory cladoceran, *Bythotrephes longimanus*, has been linked to increases in rotifer densities (particularly *Conochilus* - Hovious et al., 2006; Pothoven and Vanderploeg, 2022) which are released from exploitative competition with herbivorous cladocerans, such as *Daphnia* a preferred prey for *Bythotrephes* (Schulz and Yurista, 1998).
+
+[References:]{.underline}
+
+Barbiero, R.P., Warren, G.J., 2011. Rotifer communities in the Laurentian Great Lakes, 1983–2006 and factors affecting their composition. J. Great Lakes Res. 37, 528–540. <https://doi.org/10.1016/j.jglr.2011.04.007>.
+
+Gannon, J.E., Stemberger, R.S., 1978. Zooplankton (especially crustaceans and rotifers) as indicators of water quality. Trans. Am. Microsc. Soc. 97, 16–35.
+
+Haney, J.F., et al., 2014. An-Image-based Key to the Zooplankton of North America. version 5.0 released 2013, University of New Hampshire Center for Freshwater Biology. <http://cfb.unh.edu/cfbkey/html/index.html>.
+
+Hovious, J.T., Beisner, B.E., McCann, K.S., 2006. Epilimnetic rotifer community responses to *Bythotrphes longimanus* invasion in Canadian Shield lakes. Limnol. Oceanogr. 51, 1004–1012.
+
+MacIsaac, J.H., Grigorovich, I.A., Hoyle, J.A., Yan, N.D., and Panov, V. 1999. Invasion of Lake Ontario by the Ponto-Caspian predatory cladoceran Cercopagis pengoi. Can. J. Fish. Aquat. Sci. 56:1–5.
+
+Makarewicz, J.C., Lewis, T.W., 2015. Long-term changes in Lake Ontario rotifer abundance and composition: A response to Cercopagis predation? J. Great Lakes Res. 41, 192–199. <https://doi.org/10.1016/j.jglr.2014.11.018>.
+
+Marshall, C.C., Watkins, J.M., Connolly, J.K., Boynton, P.V., Schaefer, S.L., Currie, W.J.S., Rudstam, L.G., 2024. Patterns and drivers of seasonal succession and vertical distribution in the rotifer community of Lake Ontario in 2018. J. Great Lakes Res. 50, 102283. <https://doi.org/10.1016/j.jglr.2024.102283>.
+
+Pothoven, S.A., Vanderploeg, H.A., Factors affecting rotifer assemblages along a nearshore to offshore transect in southeastern Lake Michigan, J. Great Lakes Res. 48, 1230-1238. <https://doi.org/10.1016/j.jglr.2022.08.009>.
+
+Sládecek, V., 1983. Rotifers as indicators of water quality. Hydrobiologia 100, 169–171.
+
+Stemberger, R.S., 1979. A guide to the rotifers of the Laurentian Great Lakes. Report No. EPA-600/4-79-021. U.S. EPA Environmental Monitoring and Support Laboratory, Cincinnati, 1–200 pp.
+
+```{r OS-NS Rotifer Genera Average Biomass Boxplot, fig.cap="Figure X3. Rotifer genera offshore (OS) vs. nearshore (NS) average biomass (mg dry wt per m^3^) boxplots. Taxa groups are identified in legend by color.", fig.height=8, fig.width=12}
+# Ordering of Rot_GENERA column
+Complete_Rotifer_Outliers$Rot_GENERA <- factor(Complete_Rotifer_Outliers$Rot_GENERA, levels = c("Trichocerca", "Polyarthra", "Synchaeta", "Ascomorpha", "Conochilus", "Keratella", "Kellicottia", "Ploesoma", "Collotheca", "Gastropus", "Asplanchna"))
+
+# creating a color palette for rotifer genera stack graph
+cb_Rot_GENERA_Palette <- c("green2", "yellow2", "red2", "navy", "saddlebrown", "magenta3", "cyan3", "orange3", "mediumaquamarine", "seagreen4", "gray60")
+
+Rotifer_Genera_Boxplot <- ggplot(Complete_Rotifer_Outliers) +
+  aes(x = Type, y = All_Bio_SUM_m3, fill = Rot_GENERA) +
+  geom_boxplot() +
+facet_grid(~Rot_GENERA, scales = "free") +
+  theme_cowplot() +
+      theme(panel.border = element_rect(linetype = "solid"), strip.text = element_text(size = 12, face = "bold"), axis.text.x = element_text(size = 14, face = "bold", angle = 45, vjust = 1, hjust = 1), axis.title.x = element_blank(), axis.text.y = element_text(size = 24, face = "bold"), axis.title.y = element_text(size = 24, face = "bold"), plot.title = element_blank(), plot.background = element_rect(fill = 'white', color = NA)) +
+#legend details
+      theme(legend.title = element_blank(), legend.position = "inside", legend.position.inside = c(0.02,0.85), legend.box.background = element_rect(), legend.box.margin = margin(3,3,3,3), legend.text = element_text(size = 20, face = "bold")) +
+      guides(fill=guide_legend(nrow = 6)) +
+#scale_pattern_manual(values = c(SUMG_WWC_Pattern)) +
+#palette color for bar fills; see Barbiero for reference
+      scale_fill_manual(values = c(cb_Rot_GENERA_Palette)) +
+      labs(x = "NS-OS", y = bquote("Volumetric Biomass"~(mg/m^3)))
+
+Rotifer_Genera_Boxplot
+
+kable(Rotifer_Bio_tukey)
+```
+
+
+
+## Rotifer Genera Station Total Biomass Barplot
+
+```{r OS-NS Rotifer Genera Station Biomass, fig.cap="Figure 2. Rotifer genera station total biomass (mg dry wt per m^3^) for shallow tows at the eight offshore LTM sites, six CSMI nearshore sites along the north shore, and seven CSMI nearshore sites along the south shore.", fig.height=8, fig.width=12}
+# Ordering of Rot_GENERA column
+Rotifer_Full_Stations$Rot_GENERA <- factor(Rotifer_Full_Stations$Rot_GENERA, levels = c("Trichocerca", "Polyarthra", "Synchaeta", "Ascomorpha", "Conochilus", "Keratella", "Kellicottia", "Ploesoma", "Collotheca", "Gastropus", "Asplanchna"))
+
+# creating a color palette for rotifer genera stack graph
+cb_Rot_GENERA_Palette <- c("green2", "yellow2", "red2", "navy", "saddlebrown", "magenta3", "cyan3", "orange3", "mediumaquamarine", "seagreen4", "gray60")
+
+# Ordering of Rot_GENERA column
+Rotifer_Full_Stations$Station <- factor(Rotifer_Full_Stations$Station, levels = c("ON12", "ON25", "ON33", "ON41", "ON49", "ON55M", "ON60", "ON63", "ON68b", "ON29N", "ON43N", "ON61N", "ON62N", "ON84N", "ON17N", "ON69b", "ON67b", "ON38N", "ON65b", "ON67N", "ON73N"))
+
+# Ordering of Rot_GENERA column
+Rotifer_Full_Stations$Type <- factor(Rotifer_Full_Stations$Type, levels = c("OS", "NS"))
+
+# Stacked bar plots of total biomass for Nearshore and Offshore stations rotifer genera
+gg_NS_OS_BIO_Rot_Stations <- ggplot(Rotifer_Full_Stations, aes(x = Station, y = All_Bio_SUM_m3, fill = Rot_GENERA)) +
+    geom_bar(color = "black", stat = "identity") +
+    facet_grid(~Type, scales = "free") +
+#geom_errorbar(aes(ymax = All_Bio_MEAN_m3 + All_Bio_SE_m3, ymin = All_Bio_MEAN_m3 - All_Bio_SE_m3), width = .8) +
+#geom_bar_pattern(aes(pattern_angle = SUMGROUP, pattern_spacing = SUMGROUP), stat = "identity", color = "black", pattern_colour = "darkgray", pattern_fill = "darkgray", fill = "white") +
+#panel border, axis text and title sizes and orientations
+    theme_cowplot() +
+      theme(panel.border = element_rect(linetype = "solid"), strip.text = element_text(size = 16, face = "bold"), axis.text.x = element_text(size = 14, face = "bold", angle = 45, vjust = 1, hjust = 1), axis.title.x = element_blank(), axis.text.y = element_text(size = 24, face = "bold"), axis.title.y = element_text(size = 24, face = "bold"), plot.title = element_blank(), plot.background = element_rect(fill = 'white', color = NA)) +
+      #legend details
+      theme(legend.title = element_blank(), legend.position = "inside", legend.position.inside = c(0.30,0.85), legend.box.background = element_rect(), legend.box.margin = margin(3,3,3,3), legend.text = element_text(size = 20, face = "bold")) +
+      guides(fill=guide_legend(nrow = 6)) +
+#scale_pattern_manual(values = c(SUMG_WWC_Pattern)) +
+#palette color for bar fills; see Barbiero for reference
+      scale_fill_manual(values = c(cb_Rot_GENERA_Palette)) + 
+      labs(x = "NS-OS", y = bquote("Volumetric Biomass"~(mg/m^3))) 
+      
+gg_NS_OS_BIO_Rot_Stations
+
+```
+
+This Figure 2 shows a comparsion between rotifer assemblages in the eight offshore and thirteen nearshore stations collected in Lake Ontario during August 2023. The three western offshore stations exhibited higher biomass values compared with the eastern portion of the lake, and the differences are primaritly attributed to higher *Asplanchna* and *Conochilus* contributions. Additionally, the biomass of *Keratella*, *Kellicottia*, and *Collotheca* are notably higher in the western stations, likely associated with lower TP concentrations promoting taxa associated with more oligotrophic-like conditions (Barbiero and Warren, 2011; Marshall et al., 2024). Another notable difference is higher *Polyarthra* biomass in the five eastern stations, with the highest values at the easternmost station, indicating higher TP values and/or decreased predation pressures by *Cercopagis pengoi.*
+
+For the nearshore stations, the six northern stations generally have less overall rotifer biomass when compared with the seven southern shore stations. The major biomass differences can be attributed first to the higher *Asplanchna* contributions in the south, and secondly to the overall rotifer community exhibiting higher contributions regardless of taxa. Unlike the trends seen in the offshore samples, the northern nearshore samples generally have a lower rotifer biomass in the west compared to the east portion of the lake. Conversely, the westernmost southern stations (apart from ON17N) exhibited higher rotifer biomass which was similar to the offshore trends. South shore samples have higher *Trichocerca* biomass likely impacted by elevated nutrient conditions given their proximity to streams and bays. Especially high contributions of *Trichocerca* were observed at ON67b, perhaps impacted by discharge from Eighteen Mile Creek near Olcott, NY.
+
+[References:]{.underline}
