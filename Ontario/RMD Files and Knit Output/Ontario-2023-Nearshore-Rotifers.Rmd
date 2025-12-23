@@ -19,6 +19,7 @@ knitr::opts_chunk$set(
 	warning = FALSE,
 	echo = FALSE
 )
+
 library(knitr)
 library(tinytex)
 library(tidyverse, warn.conflicts = FALSE)
