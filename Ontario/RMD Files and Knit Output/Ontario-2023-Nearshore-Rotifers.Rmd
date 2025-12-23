@@ -58,6 +58,10 @@ library(ggrepel)
 library(maps)
 library(mapdata)
 library(emmeans)
+library(vegan)
+library(mefa4)
+library(lattice)
+library(ade4)
 ```
 
 ```{r Dataframe Importing; Ontario 2023 D20 counts and sample metadata, message=FALSE, warning=FALSE, include=FALSE}
