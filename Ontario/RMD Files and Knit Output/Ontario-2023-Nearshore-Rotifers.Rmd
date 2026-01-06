@@ -9,7 +9,7 @@ output:
     fig_caption: true
     keep_md: true
   pdf_document: default
-editor_options:
+# editor_options:
   chunk_output_type: console
 ---
 
@@ -66,17 +66,17 @@ library(ade4)
 ```
 
 ```{r Dataframe Importing; Ontario 2023 D20 counts and sample metadata, message=FALSE, warning=FALSE, include=FALSE}
-Ontario_2023_D20_Counts <- read_excel("C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Nearshore Rotifers/Ontario/Raw Data/Ontario 2023 D20 for Chris Oct 8.xlsx",
-        sheet = "D20 cnt") %>%
+Ontario_2023_D20_Counts <- read_excel("C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Nearshore-Rotifers/Ontario/Raw Data/ZOOP_DATA_2023 NS Ontario_251120.xlsx",
+        sheet = "OS count") %>%
           mutate("Type" = "OS")
-Ontario_2023_D20_Sample <- read_excel("C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Nearshore Rotifers/Ontario/Raw Data/Ontario 2023 D20 for Chris Oct 8.xlsx",
-        sheet = "D20 sample")
+Ontario_2023_D20_Sample <- read_excel("C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Nearshore-Rotifers/Ontario/Raw Data/ZOOP_DATA_2023 NS Ontario_251120.xlsx",
+        sheet = "OS sample")
 
 # Ontario 2023 Nearshore counts and sample metadata
-Ontario_2023_Nearshore_Counts <- read_excel("C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Nearshore Rotifers/Ontario/Raw Data/Ontario 2023 NS for Chris Oct 8.xlsx",
-        sheet = "NS cnt") %>%
+Ontario_2023_Nearshore_Counts <- read_excel("C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Nearshore-Rotifers/Ontario/Raw Data/ZOOP_DATA_2023 NS Ontario_251120.xlsx",
+        sheet = "NS count") %>%
           mutate("Type" = "NS")
-Ontario_2023_Nearshore_Sample <- read_excel("C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Nearshore Rotifers/Ontario/Raw Data/Ontario 2023 NS for Chris Oct 8.xlsx",
+Ontario_2023_Nearshore_Sample <- read_excel("C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Nearshore-Rotifers/Ontario/Raw Data/ZOOP_DATA_2023 NS Ontario_251120.xlsx",
         sheet = "NS sample")
 ```
 
@@ -89,14 +89,14 @@ Ontario_2023_Meta_Join <- full_join(Ontario_2023_D20_Sample, Ontario_2023_Nearsh
 
 # Combine Offshore (OS) and Nearshore (NS) count and metadata sets together
 Ontario_2023_Joined <- Ontario_2023_Full_Data %>%
-  left_join(select(Ontario_2023_Meta_Join, "Station", "Basin", "D or N", "Site Depth", "Lat", "Lon"), by = "Station")
+  left_join(select(Ontario_2023_Meta_Join, "Sample ID", "Basin", "D or N", "Site Depth", "Lat", "Lon"), by = "Sample ID")
 
-write_csv(Ontario_2023_Joined, file = "C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Nearshore Rotifers/Ontario/Processed Data/Ontario_2023_Joined.csv")
+write_csv(Ontario_2023_Joined, file = "C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Nearshore-Rotifers/Ontario/Processed Data/Ontario_2023_Joined.csv")
 
 #Summarise count data and complete with implicit zeros for each Speccode; fill group and type columns with appropriate metadata
 Ontario_2023_Complete <- Ontario_2023_Joined %>%
     group_by(Speccode, Station, Group, Type, Basin, `D or N`, `Site Depth`, Lat, Lon) %>%
-    summarise(Zoop_Bio_Sum_m3 = sum(`Biomass mg m3`), Zoop_Den_Sum_m3 = sum(Density), Zoop_Bio_Sum_m2 = sum(`Areal Bio g`)) %>%
+    summarise(Zoop_Bio_Sum_m3 = sum(`Biomass mg.m3`), Zoop_Den_Sum_m3 = sum(`Density m3`), Zoop_Bio_Sum_m2 = sum(`Areal Bio mg.m2`)) %>%
     ungroup %>%
     complete(Speccode, nesting(Station), fill = list(Zoop_Bio_Sum_m3 = 0, Zoop_Den_Sum_m3 = 0, Zoop_Bio_Sum_m2 = 0)) %>%
     group_by(Speccode) %>%
