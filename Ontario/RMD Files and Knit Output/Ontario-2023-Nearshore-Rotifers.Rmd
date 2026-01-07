@@ -89,21 +89,21 @@ Ontario_2023_Meta_Join <- full_join(Ontario_2023_D20_Sample, Ontario_2023_Nearsh
 
 # Combine Offshore (OS) and Nearshore (NS) count and metadata sets together
 Ontario_2023_Joined <- Ontario_2023_Full_Data %>%
-  left_join(select(Ontario_2023_Meta_Join, "Sample ID", "Basin", "D or N", "Site Depth", "Lat", "Lon"), by = "Sample ID")
+  left_join(select(Ontario_2023_Meta_Join, "Sample ID", "Basin", "Season", "D or N", "Site Depth", "Lat", "Lon"), by = "Sample ID")
 
 write_csv(Ontario_2023_Joined, file = "C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Nearshore-Rotifers/Ontario/Processed Data/Ontario_2023_Joined.csv")
 
 #Summarise count data and complete with implicit zeros for each Speccode; fill group and type columns with appropriate metadata
 Ontario_2023_Complete <- Ontario_2023_Joined %>%
-    group_by(Speccode, Station, Group, Type, Basin, `D or N`, `Site Depth`, Lat, Lon) %>%
+    group_by(Speccode, Station, Group, Type, Basin, Season, `D or N`, `Site Depth`, Lat, Lon) %>%
     summarise(Zoop_Bio_Sum_m3 = sum(`Biomass mg.m3`), Zoop_Den_Sum_m3 = sum(`Density m3`), Zoop_Bio_Sum_m2 = sum(`Areal Bio mg.m2`)) %>%
     ungroup %>%
-    complete(Speccode, nesting(Station), fill = list(Zoop_Bio_Sum_m3 = 0, Zoop_Den_Sum_m3 = 0, Zoop_Bio_Sum_m2 = 0)) %>%
+    complete(Speccode, nesting(Station, Season), fill = list(Zoop_Bio_Sum_m3 = 0, Zoop_Den_Sum_m3 = 0, Zoop_Bio_Sum_m2 = 0)) %>%
     group_by(Speccode) %>%
     fill(Group, .direction = "downup") %>%
     ungroup() %>%
     group_by(Station) %>%
-    fill(Type, Basin, `D or N`, `Site Depth`, Lat, Lon, .direction = "downup") %>%
+    fill(Type, Basin, Season, `D or N`, `Site Depth`, Lat, Lon, .direction = "downup") %>%
     ungroup()
 ```
 
@@ -118,30 +118,50 @@ Rot_GENERA <- rep("NA", GENUS_Length)
       Rot_GENERA[x] <- "Ascomorpha"
         } else if (Speccode[x] == "ASPHERR" || Speccode[x] == "ASPPRIO") {
         Rot_GENERA[x] <- "Asplanchna"
-          } else if (Speccode[x] == "COLSP") {
+        } else if (Speccode[x] == "BRACALC") {
+          Rot_GENERA[x] <- "Brachionus"
+        } else if (Speccode[x] == "CEPSP") {
+          Rot_GENERA[x] <- "Cephalodella"
+        } else if (Speccode[x] == "COLSP") {
           Rot_GENERA[x] <- "Collotheca"
-            } else if (Speccode[x] == "COOUNIC") {
+        } else if (Speccode[x] == "COUSP") {
+          Rot_GENERA[x] <- "Colurella"
+        } else if (Speccode[x] == "COOUNIC") {
             Rot_GENERA[x] <- "Conochilus"
-              } else if (Speccode[x] == "GASSTYL") {
+        } else if (Speccode[x] == "ENCSP") {
+              Rot_GENERA[x] <- "Encentrum"
+        } else if (Speccode[x] == "GASSTYL") {
               Rot_GENERA[x] <- "Gastropus"
-              } else if (Speccode[x] == "KELLONG") {
+        } else if (Speccode[x] == "KELLONG") {
                 Rot_GENERA[x] <- "Kellicottia"
-                } else if (Speccode[x] == "KERCOCH" || Speccode[x] == "KEREARL" || Speccode[x] == "KERCRAS" || Speccode[x] == "KERCOCHH" || Speccode[x] == "KERQUAD") {
+        } else if (Speccode[x] == "KERCOCH" || Speccode[x] == "KEREARL" || Speccode[x] == "KERCRAS" || Speccode[x] == "KERCOCHH" || Speccode[x] == "KERQUAD" || Speccode[x] == "KERHIEM" || Speccode[x] == "KERSP") {
                   Rot_GENERA[x] <- "Keratella"
-                  } else if (Speccode[x] == "PLOHUDS" || Speccode[x] == "PLOTRUN" || Speccode[x] == "PLOLENT") {
+        } else if (Speccode[x] == "LECFLEX" || Speccode[x] == "LECSP") {
+                  Rot_GENERA[x] <- "Lecane"
+        } else if (Speccode[x] == "MONCOPE" || Speccode[x] == "MONSP") {
+                  Rot_GENERA[x] <- "Monostyla"
+        } else if (Speccode[x] == "NOOSP") {
+                  Rot_GENERA[x] <- "Notomatta"
+        } else if (Speccode[x] == "NOTACUM" || Speccode[x] == "NOTLABI" || Speccode[x] == "NOTLAUR" || Speccode[x] == "NOTSP" || Speccode[x] == "NOTSQUA" ) {
+                  Rot_GENERA[x] <- "Notholca"
+        } else if (Speccode[x] == "PLOHUDS" || Speccode[x] == "PLOTRUN" || Speccode[x] == "PLOLENT") {
                     Rot_GENERA[x] <- "Ploesoma"
-                    } else if (Speccode[x] == "POLREMA" || Speccode[x] == "POLVULG" || Speccode[x] == "POLSP") {
+        } else if (Speccode[x] == "POLREMA" || Speccode[x] == "POLVULG" || Speccode[x] == "POLSP" || Speccode[x] == "POLDOLI" || Speccode[x] == "POLMAJO") {
                       Rot_GENERA[x] <- "Polyarthra"
-                      } else if (Speccode[x] == "TRIMULT" || Speccode[x] == "TRIPUSI" || Speccode[x] == "TRISP" || Speccode[x] == "TRICYLI") {
+        } else if (Speccode[x] == "TRIMULT" || Speccode[x] == "TRIPUSI" || Speccode[x] == "TRISP" || Speccode[x] == "TRICYLI") {
                         Rot_GENERA[x] <- "Trichocerca"
-                        } else if (Speccode[x] == "SYNSP") {
-                          Rot_GENERA[x] <- "Synchaeta"}
+        } else if (Speccode[x] == "TYLMONO") {
+                          Rot_GENERA[x] <- "Tylotrocha"
+        } else if (Speccode[x] == "SYNSP") {
+                          Rot_GENERA[x] <- "Synchaeta"
+        } else if (Speccode[x] == "ROTBDEL") {
+                            Rot_GENERA[x] <- "Rotifer Bdelloid"}
   }
 
 # Binding the Rot_GENERA variable created with for loop as a column to the original dataframe
 Ontario_2023_Complete <- cbind(Ontario_2023_Complete, Rot_GENERA)
 
-write_csv(Ontario_2023_Complete, file = "C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Nearshore Rotifers/Ontario/Processed Data//Ontario_2023_Complete.csv")
+write_csv(Ontario_2023_Complete, file = "C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Nearshore-Rotifers/Ontario/Processed Data/Ontario_2023_Complete.csv")
 
 ```
 
@@ -150,7 +170,7 @@ write_csv(Ontario_2023_Complete, file = "C:/Users/cmars/OneDrive/Desktop/CCM Wor
 # Summarize all zoop and rotifer volumetric data by SPECCODE,
 All_Speccode_Sum_Stats <- Ontario_2023_Complete %>%
     #filter(CRUISE_DECODE == "Spring") %>%
-    group_by(Speccode, Group, Type) %>%
+    group_by(Speccode, Group, Type, Season) %>%
       summarise(All_Bio_SUM_m3 = sum(Zoop_Bio_Sum_m3),
       All_Den_SUM_m3 = sum(Zoop_Den_Sum_m3),
       All_Bio_SUM_m2 = sum(Zoop_Bio_Sum_m2),
@@ -165,12 +185,12 @@ All_Speccode_Sum_Stats <- Ontario_2023_Complete %>%
       All_Den_SE_m3 = All_Den_SD_m3 / sqrt(N),
       All_Bio_SE_m2 = All_Bio_SD_m2 / sqrt(N))
 
-write_csv(All_Speccode_Sum_Stats, file = "C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Nearshore Rotifers/Ontario/Processed Data/All_Speccode_Sum_Stats.csv")
+write_csv(All_Speccode_Sum_Stats, file = "C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Nearshore-Rotifers/Ontario/Processed Data/All_Speccode_Sum_Stats.csv")
 
 # Summarize rotifer volumetric data by SPECCODE
 Rot_Speccode_Sum_Stats <- Ontario_2023_Complete %>%
   filter(Group == "ROT") %>%
-  group_by(Speccode, Type) %>%
+  group_by(Speccode, Type, Season) %>%
     summarise(All_Bio_SUM_m3 = sum(Zoop_Bio_Sum_m3),
     All_Den_SUM_m3 = sum(Zoop_Den_Sum_m3),
     All_Bio_SUM_m2 = sum(Zoop_Bio_Sum_m2),
@@ -185,12 +205,12 @@ Rot_Speccode_Sum_Stats <- Ontario_2023_Complete %>%
     All_Den_SE_m3 = All_Den_SD_m3 / sqrt(N),
     All_Bio_SE_m2 = All_Bio_SD_m2 / sqrt(N))
 
-write_csv(Rot_Speccode_Sum_Stats, file = "C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Nearshore Rotifers/Ontario/Processed Data/Rot_Speccode_Sum_Stats.csv")
+write_csv(Rot_Speccode_Sum_Stats, file = "C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Nearshore-Rotifers/Ontario/Processed Data/Rot_Speccode_Sum_Stats.csv")
 
 # Summarize rotifer volumetric data by Rot_GENERA
 Rot_Genera_Sum_Stats <- Ontario_2023_Complete %>%
   filter(Group == "ROT") %>%
-  group_by(Rot_GENERA, Type) %>%
+  group_by(Rot_GENERA, Type, Season) %>%
     summarise(All_Bio_SUM_m3 = sum(Zoop_Bio_Sum_m3),
     All_Den_SUM_m3 = sum(Zoop_Den_Sum_m3),
     All_Bio_SUM_m2 = sum(Zoop_Bio_Sum_m2),
@@ -205,12 +225,12 @@ Rot_Genera_Sum_Stats <- Ontario_2023_Complete %>%
     All_Den_SE_m3 = All_Den_SD_m3 / sqrt(N),
     All_Bio_SE_m2 = All_Bio_SD_m2 / sqrt(N))
 
-write_csv(Rot_Genera_Sum_Stats, file = "C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Nearshore Rotifers/Ontario/Processed Data/Rot_Genera_Sum_Stats.csv")
+write_csv(Rot_Genera_Sum_Stats, file = "C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Nearshore-Rotifers/Ontario/Processed Data/Rot_Genera_Sum_Stats.csv")
 
 # Summarize all rotifer volumetric data by Rot_GENERA for Stations
 Rotifer_Full_Stations <- Ontario_2023_Complete %>%
   filter(Group == "ROT") %>%
-  group_by(Rot_GENERA, Station, Type) %>%
+  group_by(Rot_GENERA, Station, Type, Season) %>%
     summarise(All_Bio_SUM_m3 = sum(Zoop_Bio_Sum_m3),
     All_Den_SUM_m3 = sum(Zoop_Den_Sum_m3),
     All_Bio_SUM_m2 = sum(Zoop_Bio_Sum_m2),
@@ -225,7 +245,7 @@ Rotifer_Full_Stations <- Ontario_2023_Complete %>%
     All_Den_SE_m3 = All_Den_SD_m3 / sqrt(N),
     All_Bio_SE_m2 = All_Bio_SD_m2 / sqrt(N))
 
-write_csv(Rotifer_Full_Stations, file = "C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Nearshore Rotifers/Ontario/Processed Data/Rotifer_Full_Stations.csv")
+write_csv(Rotifer_Full_Stations, file = "C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Nearshore-Rotifers/Ontario/Processed Data/Rotifer_Full_Stations.csv")
 
 #We used an Analysis of Variance (ANOVA) approach to determine whether there were significant differences of the means of the four groups in terms of overall biomass.  Welch’s t-tests were then run for comparison of each group considering different sample sizes. 
 ```
@@ -235,7 +255,7 @@ write_csv(Rotifer_Full_Stations, file = "C:/Users/cmars/OneDrive/Desktop/CCM Wor
 #Fit the Linear Mixed Model with lmer()
 Rotifer_Bio_Station <- Ontario_2023_Complete %>% 
   filter(Group == "ROT") %>%
-  group_by(Station, Rot_GENERA, Type) %>%
+  group_by(Station, Rot_GENERA, Type, Season) %>%
     summarise(All_Bio_SUM_m3 = sum(Zoop_Bio_Sum_m3),
     All_Den_SUM_m3 = sum(Zoop_Den_Sum_m3)) 
 
