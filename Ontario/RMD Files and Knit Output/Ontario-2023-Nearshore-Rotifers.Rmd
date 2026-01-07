@@ -373,7 +373,7 @@ Rotifer_Bio_Summer_tukey <- contrast(Rotifer_Bio_Summer_emmeans, method = "pairw
 
 # View results
 summary(Rotifer_Bio_Summer_tukey)
-kable(anova(Rotifer_Bio_Summer_tukey, type = 3))
+#kable(anova(Rotifer_Bio_Summer_tukey, type = 3))
 kable(Rotifer_Bio_Summer_tukey)
 
 ### Spring LME Model
@@ -397,7 +397,7 @@ Rotifer_Bio_Spring_tukey <- contrast(Rotifer_Bio_Spring_emmeans, method = "pairw
 
 # View results
 summary(Rotifer_Bio_Spring_tukey)
-kable(anova(Rotifer_Bio_Summer_tukey, type = 3))
+#kable(anova(Rotifer_Bio_Summer_tukey, type = 3))
 kable(Rotifer_Bio_Spring_tukey)
 ```
 
@@ -457,7 +457,7 @@ Marshall, C.C., Watkins, J.M., Connolly, J.K., Boynton, P.V., Schaefer, S.L., Cu
 
 ## Rotifer Species Spring Offshore-Nearshore Biomass Barplot
 
-```{r OS-NS Spring Rotifer Species Average Biomass, fig.cap="Figure X1. Spring Rotifer species offshore (OS) vs. nearshore (NS) average biomass (mg dry wt per m^3^). Error bars represent standard errors of the means. Taxa groups are identified in legend by color.", fig.height=8, fig.width=12}
+```{r OS-NS Spring Rotifer Species Average Biomass, fig.cap="Figure X2. Spring Rotifer species offshore (OS) vs. nearshore (NS) average biomass (mg dry wt per m^3^). Error bars represent standard errors of the means. Taxa groups are identified in legend by color.", fig.height=8, fig.width=12}
 
 # Ordering of Rot_GENERA column
 #Rot_Speccode_Sum_Stats$Speccode <- factor(Rot_Speccode_Sum_Stats$Speccode, levels = c("ASCECAU", "ASCOVAL", "ASPHERR", "ASPPRIO", "COLSP", "COOUNIC", "GASSTYL", "KELLONG", "KERCOCH", "KERCOCHH", "KERCRAS", "KEREARL", "KERQUAD", "PLOHUDS", "PLOLENT", "PLOTRUN", "POLREMA", "POLSP", "POLVULG", "SYNSP", "TRICYLI", "TRIMULT", "TRIPUSI", "TRISP"))
@@ -494,8 +494,8 @@ gg_NS_OF_BIO_Rot_Speccode_Spring <- ggplot(Rot_Speccode_Sum_Stats_Spring, aes(x 
     theme_cowplot() +
       theme(panel.border = element_rect(linetype = "solid"), strip.text = element_text(size = 8, angle = 45, vjust = 0.4, hjust = 0.4, face = "bold"), axis.text.x = element_text(size = 12, face = "bold", angle = 45, vjust = 1, hjust = 1), axis.title.x = element_blank(), axis.text.y = element_text(size = 24, face = "bold"), axis.title.y = element_text(size = 24, face = "bold"), plot.title = element_blank(), plot.background = element_rect(fill='white', color=NA)) +
       #legend details
-      theme(legend.title = element_blank(), legend.position = "inside", legend.position.inside = c(0.02,0.87), legend.box.background = element_rect(), legend.box.margin = margin(3,3,3,3), legend.text = element_text(size = 18, face = "bold")) +
-  guides(fill=guide_legend(nrow = 5)) +
+      theme(legend.title = element_blank(), legend.position = "inside", legend.position.inside = c(0.35,0.87), legend.box.background = element_rect(), legend.box.margin = margin(3,3,3,3), legend.text = element_text(size = 14, face = "bold")) +
+  guides(fill=guide_legend(nrow = 6)) +
 #scale_pattern_manual(values = c(SUMG_WWC_Pattern)) +
 #palette color for bar fills; see Barbiero for reference
 scale_fill_manual(values = c(cb_Speccode_Palette)) +
@@ -506,7 +506,7 @@ gg_NS_OF_BIO_Rot_Speccode_Spring
 
 ## Rotifer Species Offshore-Nearshore Biomass Barplot Excluding Asplanchna
 
-```{r OS-NS Summer Rotifer Species (No Asplanchna) Average Biomass, fig.cap="Figure X2. Summer Rotifer species (excluding Asplanchna) offshore (OS) vs. nearshore (NS) average biomass (mg dry wt per m^3^). Error bars represent standard errors of the means. Taxa groups are identified in legend by color.", fig.height=8, fig.width=12}
+```{r OS-NS Summer Rotifer Species (No Asplanchna) Average Biomass, fig.cap="Figure X3. Summer Rotifer species (excluding Asplanchna) offshore (OS) vs. nearshore (NS) average biomass (mg dry wt per m^3^). Error bars represent standard errors of the means. Taxa groups are identified in legend by color.", fig.height=8, fig.width=12}
 #Brachionus BRACALC
 #Cephalodella CEPSP
 #Colurella COUSP
@@ -559,7 +559,7 @@ Marshall, C.C., Watkins, J.M., Connolly, J.K., Boynton, P.V., Schaefer, S.L., Cu
 
 ## Spring Rotifer Species Offshore-Nearshore Biomass Barplot Excluding Synchaeta
 
-```{r OS-NS Spring Rotifer Species (No Synchaeta) Average Biomass, fig.cap="Figure X2. Spring Rotifer species (excluding Synchaeta) offshore (OS) vs. nearshore (NS) average biomass (mg dry wt per m^3^). Error bars represent standard errors of the means. Taxa groups are identified in legend by color.", fig.height=8, fig.width=12}
+```{r OS-NS Spring Rotifer Species (No Synchaeta) Average Biomass, fig.cap="Figure X4. Spring Rotifer species (excluding Synchaeta) offshore (OS) vs. nearshore (NS) average biomass (mg dry wt per m^3^). Error bars represent standard errors of the means. Taxa groups are identified in legend by color.", fig.height=8, fig.width=12}
 #Brachionus BRACALC
 #Cephalodella CEPSP
 #Colurella COUSP
@@ -591,7 +591,7 @@ gg_NS_OF_BIO_Rot_Speccode_Spring_No_Synchaeta <- ggplot(Rot_Speccode_Sum_Stats_S
     theme_cowplot() +
       theme(panel.border = element_rect(linetype = "solid"), strip.text = element_text(size = 8, angle = 45, vjust = 0.4, hjust = 0.4, face = "bold"), axis.text.x = element_text(size = 12, face = "bold", angle = 45, vjust = 1, hjust = 1), axis.title.x = element_blank(), axis.text.y = element_text(size = 24, face = "bold"), axis.title.y = element_text(size = 24, face = "bold"), plot.title = element_blank(), plot.background = element_rect(fill='white', color=NA)) +
       #legend details
-      theme(legend.title = element_blank(), legend.position = "inside", legend.position.inside = c(0.02,0.85), legend.box.background = element_rect(), legend.box.margin = margin(3,3,3,3), legend.text = element_text(size = 16, face = "bold")) +
+      theme(legend.title = element_blank(), legend.position = "inside", legend.position.inside = c(0.10,0.85), legend.box.background = element_rect(), legend.box.margin = margin(3,3,3,3), legend.text = element_text(size = 16, face = "bold")) +
   guides(fill=guide_legend(nrow = 5)) +
 #scale_pattern_manual(values = c(SUMG_WWC_Pattern)) +
 #palette color for bar fills; see Barbiero for reference
@@ -603,7 +603,7 @@ gg_NS_OF_BIO_Rot_Speccode_Spring_No_Synchaeta
 
 ## Rotifer Genera Summer Offshore-Nearshore Biomass Barplot
 
-```{r Summer OS-NS Rotifer Genera Average Biomass, fig.cap="Figure 1. Summer Rotifer genera offshore (OS) vs. nearshore (NS) average biomass (mg dry wt per m^3^). Error bars represent standard errors of the means. Taxa groups are identified in legend by color.", fig.height=8, fig.width=12}
+```{r Summer OS-NS Rotifer Genera Average Biomass, fig.cap="Figure 1. Summer Rotifer genera offshore (OS) vs. nearshore (NS) average biomass (mg dry wt per m^3^). Error bars represent standard errors of the means. Taxa groups are identified in legend by color.", fig.height=8, fig.width=12, message=TRUE, warning=FALSE}
 
 #Brachionus BRACALC
 #Cephalodella CEPSP
@@ -677,7 +677,7 @@ Stemberger, R.S., 1979. A guide to the rotifers of the Laurentian Great Lakes. R
 
 ## Rotifer Genera Spring Offshore-Nearshore Biomass Barplot
 
-```{r Spring OS-NS Rotifer Genera Average Biomass, fig.cap="Figure 1. Spring Rotifer genera offshore (OS) vs. nearshore (NS) average biomass (mg dry wt per m^3^). Error bars represent standard errors of the means. Taxa groups are identified in legend by color.", fig.height=8, fig.width=12}
+```{r Spring OS-NS Rotifer Genera Average Biomass, fig.cap="Figure 2. Spring Rotifer genera offshore (OS) vs. nearshore (NS) average biomass (mg dry wt per m^3^). Error bars represent standard errors of the means. Taxa groups are identified in legend by color.", fig.height=8, fig.width=12, message=FALSE, warning=FALSE}
 
 #Brachionus BRACALC
 #Cephalodella CEPSP
@@ -711,7 +711,7 @@ gg_NS_OF_BIO_Rot_Genera_Spring <- ggplot(Rot_Genera_Sum_Stats_Spring, aes(x = Ty
     theme_cowplot() +
       theme(panel.border = element_rect(linetype = "solid"), strip.text = element_text(size = 12, face = "bold"), axis.text.x = element_text(size = 14, face = "bold", angle = 45, vjust = 1, hjust = 1), axis.title.x = element_blank(), axis.text.y = element_text(size = 24, face = "bold"), axis.title.y = element_text(size = 24, face = "bold"), plot.title = element_blank(), plot.background = element_rect(fill = 'white', color = NA)) +
 #legend details
-      theme(legend.title = element_blank(), legend.position = "inside", legend.position.inside = c(0.02,0.85), legend.box.background = element_rect(), legend.box.margin = margin(3,3,3,3), legend.text = element_text(size = 20, face = "bold")) +
+      theme(legend.title = element_blank(), legend.position = "inside", legend.position.inside = c(0.25,0.85), legend.box.background = element_rect(), legend.box.margin = margin(3,3,3,3), legend.text = element_text(size = 20, face = "bold")) +
       guides(fill=guide_legend(nrow = 4)) +
 #scale_pattern_manual(values = c(SUMG_WWC_Pattern)) +
 #palette color for bar fills; see Barbiero for reference
@@ -721,8 +721,9 @@ gg_NS_OF_BIO_Rot_Genera_Spring <- ggplot(Rot_Genera_Sum_Stats_Spring, aes(x = Ty
 gg_NS_OF_BIO_Rot_Genera_Spring
 ```
 
+## Rotifer Genera Summer Offshore-Nearshore Biomass Boxplot
 
-```{r Summer OS-NS Rotifer Genera Average Biomass Boxplot, fig.cap="Figure X3. Summer Rotifer genera offshore (OS) vs. nearshore (NS) average biomass (mg dry wt per m^3^) boxplots. Taxa groups are identified in legend by color.", fig.height=8, fig.width=12}
+```{r Summer OS-NS Rotifer Genera Average Biomass Boxplot, fig.cap="Figure X5. Summer Rotifer genera offshore (OS) vs. nearshore (NS) average biomass (mg dry wt per m^3^) boxplots. Taxa groups are identified in legend by color.", fig.height=8, fig.width=12, message=FALSE, warning=FALSE}
 # Rotifer Genera Summary Stats Spring Filter
 
 Rotifer_Bio_Summer_model
@@ -752,7 +753,9 @@ Rotifer_Genera_Boxplot_Summer
 kable(Rotifer_Bio_Summer_tukey)
 ```
 
-```{r Spring OS-NS Rotifer Genera Average Biomass Boxplot, fig.cap="Figure X3. Spring Rotifer genera offshore (OS) vs. nearshore (NS) average biomass (mg dry wt per m^3^) boxplots. Taxa groups are identified in legend by color.", fig.height=8, fig.width=12}
+## Rotifer Genera Spring Offshore-Nearshore Biomass Boxplot
+
+```{r Spring OS-NS Rotifer Genera Average Biomass Boxplot, fig.cap="Figure X6. Spring Rotifer genera offshore (OS) vs. nearshore (NS) average biomass (mg dry wt per m^3^) boxplots. Taxa groups are identified in legend by color.", fig.height=8, fig.width=12, message=FALSE, warning=FALSE}
 # Rotifer Genera Summary Stats Spring Filter
 Rotifer_Bio_Spring_model
 
@@ -769,7 +772,7 @@ facet_grid(~Rot_GENERA, scales = "free") +
   theme_cowplot() +
       theme(panel.border = element_rect(linetype = "solid"), strip.text = element_text(size = 12, face = "bold"), axis.text.x = element_text(size = 14, face = "bold", angle = 45, vjust = 1, hjust = 1), axis.title.x = element_blank(), axis.text.y = element_text(size = 24, face = "bold"), axis.title.y = element_text(size = 24, face = "bold"), plot.title = element_blank(), plot.background = element_rect(fill = 'white', color = NA)) +
 #legend details
-      theme(legend.title = element_blank(), legend.position = "inside", legend.position.inside = c(0.02,0.85), legend.box.background = element_rect(), legend.box.margin = margin(3,3,3,3), legend.text = element_text(size = 20, face = "bold")) +
+      theme(legend.title = element_blank(), legend.position = "inside", legend.position.inside = c(0.35,0.85), legend.box.background = element_rect(), legend.box.margin = margin(3,3,3,3), legend.text = element_text(size = 20, face = "bold")) +
       guides(fill=guide_legend(nrow = 6)) +
 #scale_pattern_manual(values = c(SUMG_WWC_Pattern)) +
 #palette color for bar fills; see Barbiero for reference
@@ -862,7 +865,7 @@ gg_NS_OS_BIO_Rot_Stations_Spring <- ggplot(Rotifer_Full_Stations_Spring, aes(x =
     theme_cowplot() +
       theme(panel.border = element_rect(linetype = "solid"), strip.text = element_text(size = 16, face = "bold"), axis.text.x = element_text(size = 14, face = "bold", angle = 45, vjust = 1, hjust = 1), axis.title.x = element_blank(), axis.text.y = element_text(size = 24, face = "bold"), axis.title.y = element_text(size = 24, face = "bold"), plot.title = element_blank(), plot.background = element_rect(fill = 'white', color = NA)) +
       #legend details
-      theme(legend.title = element_blank(), legend.position = "inside", legend.position.inside = c(0.05,0.85), legend.box.background = element_rect(), legend.box.margin = margin(3,3,3,3), legend.text = element_text(size = 20, face = "bold")) +
+      theme(legend.title = element_blank(), legend.position = "inside", legend.position.inside = c(0.01,0.85), legend.box.background = element_rect(), legend.box.margin = margin(3,3,3,3), legend.text = element_text(size = 16, face = "bold")) +
       guides(fill=guide_legend(nrow = 6)) +
 #scale_pattern_manual(values = c(SUMG_WWC_Pattern)) +
 #palette color for bar fills; see Barbiero for reference
