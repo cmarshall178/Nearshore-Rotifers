@@ -559,7 +559,7 @@ labs(x = "NS-OS", y = bquote("Volumetric Biomass"~(mg/m^3)))
 gg_NS_OF_BIO_Rot_Speccode_Spring
 ```
 
-## Rotifer Species Offshore-Nearshore Biomass Barplot Excluding Asplanchna
+## Rotifer Species Summer Offshore-Nearshore Biomass Barplot Excluding Asplanchna
 
 ```{r OS-NS Summer Rotifer Species (No Asplanchna) Average Biomass, fig.cap="Figure X3. Summer Rotifer species (excluding Asplanchna) offshore (OS) vs. nearshore (NS) average biomass (mg dry wt per m^3^). Error bars represent standard errors of the means. Taxa groups are identified in legend by color.", fig.height=8, fig.width=12}
 #Brachionus BRACALC
@@ -658,7 +658,7 @@ gg_NS_OF_BIO_Rot_Speccode_Spring_No_Synchaeta
 
 ## Rotifer Genera Summer Offshore-Nearshore Biomass Barplot
 
-```{r Summer OS-NS Rotifer Genera Average Biomass, fig.cap="Figure 1. Summer Rotifer genera offshore (OS) vs. nearshore (NS) average biomass (mg dry wt per m^3^). Error bars represent standard errors of the means. Taxa groups are identified in legend by color.", fig.height=8, fig.width=12, message=TRUE, warning=FALSE}
+```{r Summer OS-NS Rotifer Genera Average Biomass Barplot, fig.cap="Figure 1. Summer Rotifer genera offshore (OS) vs. nearshore (NS) average biomass (mg dry wt per m^3^). Error bars represent standard errors of the means. Taxa groups are identified in legend by color.", fig.height=8, fig.width=12, message=TRUE, warning=FALSE}
 
 #Brachionus BRACALC
 #Cephalodella CEPSP
@@ -781,8 +781,6 @@ gg_NS_OF_BIO_Rot_Genera_Spring
 ```{r Summer OS-NS Rotifer Genera Average Biomass Boxplot, fig.cap="Figure X5. Summer Rotifer genera offshore (OS) vs. nearshore (NS) average biomass (mg dry wt per m^3^) boxplots. Taxa groups are identified in legend by color.", fig.height=8, fig.width=12, message=FALSE, warning=FALSE}
 # Rotifer Genera Summary Stats Spring Filter
 
-Rotifer_Bio_Summer_model
-
 # Ordering of Rot_GENERA column
 Rotifer_Bio_Summer_model$Rot_GENERA <- factor(Rotifer_Bio_Summer_model$Rot_GENERA, levels = c("Trichocerca", "Polyarthra", "Synchaeta", "Ascomorpha", "Conochilus", "Keratella", "Kellicottia", "Ploesoma", "Collotheca", "Gastropus", "Asplanchna"))
 
@@ -812,7 +810,6 @@ kable(Rotifer_Bio_Summer_tukey)
 
 ```{r Spring OS-NS Rotifer Genera Average Biomass Boxplot, fig.cap="Figure X6. Spring Rotifer genera offshore (OS) vs. nearshore (NS) average biomass (mg dry wt per m^3^) boxplots. Taxa groups are identified in legend by color.", fig.height=8, fig.width=12, message=FALSE, warning=FALSE}
 # Rotifer Genera Summary Stats Spring Filter
-Rotifer_Bio_Spring_model
 
 # Ordering of Rot_GENERA column
 Rotifer_Bio_Spring_model$Rot_GENERA <- factor(Rotifer_Bio_Spring_model$Rot_GENERA, levels = c("Notholca", "Polyarthra", "Synchaeta", "Brachionus", "Conochilus", "Keratella", "Kellicottia", "Cephalodella", "Collotheca", "Colurella", "Encentrum", "Monostyla", "Lecane", "Notomatta", "Rotifer Bdelloid", "Tylotrocha"))
@@ -841,7 +838,7 @@ kable(Rotifer_Bio_Spring_tukey)
 
 ## Rotifer Summer Genera Station Total Biomass Barplot
 
-```{r OS-NS Summer Rotifer Genera Station Biomass, fig.cap="Figure 2. Summer Rotifer genera station total biomass (mg dry wt per m^3^) for shallow tows at the eight offshore LTM sites, six CSMI nearshore sites along the north shore, and seven CSMI nearshore sites along the south shore.", fig.height=8, fig.width=12}
+```{r OS-NS Summer Rotifer Genera Station Biomass, fig.cap="Figure 3. Summer Rotifer genera station total biomass (mg dry wt per m^3^) for shallow tows at the eight offshore LTM sites, six CSMI nearshore sites along the north shore, and seven CSMI nearshore sites along the south shore.", fig.height=8, fig.width=12}
 
 # Rotifer Genera Summary Stats Spring Filter
 Rotifer_Full_Stations_Summer <- Rotifer_Full_Stations %>%  
@@ -878,7 +875,6 @@ gg_NS_OS_BIO_Rot_Stations_Summer <- ggplot(Rotifer_Full_Stations_Summer, aes(x =
       labs(x = "NS-OS", y = bquote("Volumetric Biomass"~(mg/m^3))) 
       
 gg_NS_OS_BIO_Rot_Stations_Summer
-
 ```
 
 This Figure 2 shows a comparsion between rotifer assemblages in the eight offshore and thirteen nearshore stations collected in Lake Ontario during August 2023. The three western offshore stations exhibited higher biomass values compared with the eastern portion of the lake, and the differences are primaritly attributed to higher *Asplanchna* and *Conochilus* contributions. Additionally, the biomass of *Keratella*, *Kellicottia*, and *Collotheca* are notably higher in the western stations, likely associated with lower TP concentrations promoting taxa associated with more oligotrophic-like conditions (Barbiero and Warren, 2011; Marshall et al., 2024). Another notable difference is higher *Polyarthra* biomass in the five eastern stations, with the highest values at the easternmost station, indicating higher TP values and/or decreased predation pressures by *Cercopagis pengoi.*
@@ -889,7 +885,7 @@ For the nearshore stations, the six northern stations generally have less overal
 
 ## Rotifer Spring Genera Station Total Biomass Barplot
 
-```{r OS-NS Spring Rotifer Genera Station Biomass, fig.cap="Figure 2. Spring Rotifer genera station total biomass (mg dry wt per m^3^) for shallow tows at the eight offshore LTM sites, six CSMI nearshore sites along the north shore, and seven CSMI nearshore sites along the south shore.", fig.height=8, fig.width=12}
+```{r OS-NS Spring Rotifer Genera Station Biomass, fig.cap="Figure 4. Spring Rotifer genera station total biomass (mg dry wt per m^3^) for shallow tows at the eight offshore LTM sites, six CSMI nearshore sites along the north shore, and seven CSMI nearshore sites along the south shore.", fig.height=8, fig.width=12}
 
 # Rotifer Genera Summary Stats Spring Filter
 Rotifer_Full_Stations_Spring <- Rotifer_Full_Stations %>%  
@@ -930,7 +926,7 @@ gg_NS_OS_BIO_Rot_Stations_Spring
 
 ## Zoop Taxa Summer Offshore-Nearshore Biomass Barplot
 
-```{r Summer OS-NS Rotifer Genera Average Biomass, fig.cap="Figure 1. Summer Rotifer genera offshore (OS) vs. nearshore (NS) average biomass (mg dry wt per m^3^). Error bars represent standard errors of the means. Taxa groups are identified in legend by color.", fig.height=8, fig.width=12, message=TRUE, warning=FALSE}
+```{r Summer OS-NS Zoop Taxa Average Biomass Barplot, fig.cap="Figure 5. Summer Zoop taxa offshore (OS) vs. nearshore (NS) average biomass (mg dry wt per m^3^). Error bars represent standard errors of the means. Taxa groups are identified in legend by color.", fig.height=8, fig.width=12, message=TRUE, warning=FALSE}
 
 # Zoop Taxa Summary Stats Summer Filter
 All_Taxa_Sum_Stats_Summer <- All_Taxa_Sum_Stats %>%  
@@ -954,7 +950,7 @@ gg_NS_OF_BIO_Taxa_Summer <- ggplot(All_Taxa_Sum_Stats_Summer, aes(x = Type, y = 
       theme(panel.border = element_rect(linetype = "solid"), strip.text = element_text(size = 12, face = "bold"), axis.text.x = element_text(size = 14, face = "bold", angle = 45, vjust = 1, hjust = 1), axis.title.x = element_blank(), axis.text.y = element_text(size = 24, face = "bold"), axis.title.y = element_text(size = 24, face = "bold"), plot.title = element_blank(), plot.background = element_rect(fill = 'white', color = NA)) +
 #legend details
       theme(legend.title = element_blank(), legend.position = "inside", legend.position.inside = c(0.02,0.85), legend.box.background = element_rect(), legend.box.margin = margin(3,3,3,3), legend.text = element_text(size = 20, face = "bold")) +
-      guides(fill=guide_legend(nrow = 6)) +
+      guides(fill=guide_legend(nrow = 4)) +
 #scale_pattern_manual(values = c(SUMG_WWC_Pattern)) +
 #palette color for bar fills; see Barbiero for reference
       scale_fill_manual(values = c(Barb_Palette)) +
@@ -965,7 +961,7 @@ gg_NS_OF_BIO_Taxa_Summer
 
 ## Zoop Taxa Summer Offshore-Nearshore Biomass Barplot
 
-```{r Summer OS-NS Rotifer Genera Average Biomass, fig.cap="Figure 1. Summer Rotifer genera offshore (OS) vs. nearshore (NS) average biomass (mg dry wt per m^3^). Error bars represent standard errors of the means. Taxa groups are identified in legend by color.", fig.height=8, fig.width=12, message=TRUE, warning=FALSE}
+```{r Summer OS-NS Zoop Taxa Average Biomass Barplot , fig.cap="Figure 6. Summer Zoop taxa offshore (OS) vs. nearshore (NS) average biomass (mg dry wt per m^3^). Error bars represent standard errors of the means. Taxa groups are identified in legend by color.", fig.height=8, fig.width=12, message=TRUE, warning=FALSE}
 
 # Zoop Taxa Summary Stats Summer Filter
 All_Taxa_Sum_Stats_Spring <- All_Taxa_Sum_Stats %>%  
@@ -989,7 +985,7 @@ gg_NS_OF_BIO_Taxa_Spring <- ggplot(All_Taxa_Sum_Stats_Spring, aes(x = Type, y = 
       theme(panel.border = element_rect(linetype = "solid"), strip.text = element_text(size = 12, face = "bold"), axis.text.x = element_text(size = 14, face = "bold", angle = 45, vjust = 1, hjust = 1), axis.title.x = element_blank(), axis.text.y = element_text(size = 24, face = "bold"), axis.title.y = element_text(size = 24, face = "bold"), plot.title = element_blank(), plot.background = element_rect(fill = 'white', color = NA)) +
 #legend details
       theme(legend.title = element_blank(), legend.position = "inside", legend.position.inside = c(0.02,0.85), legend.box.background = element_rect(), legend.box.margin = margin(3,3,3,3), legend.text = element_text(size = 20, face = "bold")) +
-      guides(fill=guide_legend(nrow = 6)) +
+      guides(fill=guide_legend(nrow = 4)) +
 #scale_pattern_manual(values = c(SUMG_WWC_Pattern)) +
 #palette color for bar fills; see Barbiero for reference
       scale_fill_manual(values = c(Barb_Palette)) +
@@ -1000,8 +996,7 @@ gg_NS_OF_BIO_Taxa_Spring
 
 ## Zoop Summer Taxa Station Total Biomass Barplot
 
-```{r OS-NS Summer Zoop Taxa Station Biomass, fig.cap="Figure 2. Summer Zoop taxa station total biomass (mg dry wt per m^3^) for shallow tows at the eight offshore LTM sites, six CSMI nearshore sites along the north shore, and seven CSMI nearshore sites along the south shore.", fig.height=8, fig.width=12}
-Zoop_Bio_Summer_model
+```{r OS-NS Summer Zoop Taxa Station Biomass, fig.cap="Figure 7. Summer Zoop taxa station total biomass (mg dry wt per m^3^) for shallow tows at the eight offshore LTM sites, six CSMI nearshore sites along the north shore, and seven CSMI nearshore sites along the south shore.", fig.height=8, fig.width=12}
 
 # Ordering of Zoop Taxa column
 Zoop_Bio_Summer_model$Group <- factor(Zoop_Bio_Summer_model$Group , levels = c("ROT", "NAU", "DVEL", "CAL", "CYC", "DAP", "NDAP", "PRED"))
@@ -1037,8 +1032,7 @@ gg_NS_OS_BIO_Zoop_Stations_Summer
 
 ## Zoop Spring Taxa Station Total Biomass Barplot
 
-```{r OS-NS Spring Zoop Taxa Station Biomass, fig.cap="Figure 2. Spring Zoop taxa station total biomass (mg dry wt per m^3^) for shallow tows at the eight offshore LTM sites, six CSMI nearshore sites along the north shore, and seven CSMI nearshore sites along the south shore.", fig.height=8, fig.width=12}
-Zoop_Bio_Spring_model
+```{r OS-NS Spring Zoop Taxa Station Biomass, fig.cap="Figure 8. Spring Zoop taxa station total biomass (mg dry wt per m^3^) for shallow tows at the eight offshore LTM sites, six CSMI nearshore sites along the north shore, and seven CSMI nearshore sites along the south shore.", fig.height=8, fig.width=12}
 
 # Ordering of Zoop Taxa column
 Zoop_Bio_Spring_model$Group <- factor(Zoop_Bio_Spring_model$Group , levels = c("ROT", "NAU", "DVEL", "CAL", "CYC", "DAP", "NDAP", "MAL"))
@@ -1062,7 +1056,7 @@ gg_NS_OS_BIO_Zoop_Stations_Spring <- ggplot(Zoop_Bio_Spring_model, aes(x = Stati
     theme_cowplot() +
       theme(panel.border = element_rect(linetype = "solid"), strip.text = element_text(size = 16, face = "bold"), axis.text.x = element_text(size = 14, face = "bold", angle = 45, vjust = 1, hjust = 1), axis.title.x = element_blank(), axis.text.y = element_text(size = 24, face = "bold"), axis.title.y = element_text(size = 24, face = "bold"), plot.title = element_blank(), plot.background = element_rect(fill = 'white', color = NA)) +
       #legend details
-      theme(legend.title = element_blank(), legend.position = "inside", legend.position.inside = c(0.01,0.85), legend.box.background = element_rect(), legend.box.margin = margin(3,3,3,3), legend.text = element_text(size = 16, face = "bold")) +
+      theme(legend.title = element_blank(), legend.position = "inside", legend.position.inside = c(0.01,0.85), legend.box.background = element_rect(), legend.box.margin = margin(3,3,3,3), legend.text = element_text(size = 20, face = "bold")) +
       guides(fill=guide_legend(nrow = 4)) +
 #scale_pattern_manual(values = c(SUMG_WWC_Pattern)) +
 #palette color for bar fills; see Barbiero for reference
