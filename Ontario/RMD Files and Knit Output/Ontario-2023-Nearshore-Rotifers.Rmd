@@ -959,9 +959,9 @@ gg_NS_OF_BIO_Taxa_Summer <- ggplot(All_Taxa_Sum_Stats_Summer, aes(x = Type, y = 
 gg_NS_OF_BIO_Taxa_Summer
 ```
 
-## Zoop Taxa Summer Offshore-Nearshore Biomass Barplot
+## Zoop Taxa Spring Offshore-Nearshore Biomass Barplot
 
-```{r Summer OS-NS Zoop Taxa Average Biomass Barplot , fig.cap="Figure 6. Summer Zoop taxa offshore (OS) vs. nearshore (NS) average biomass (mg dry wt per m^3^). Error bars represent standard errors of the means. Taxa groups are identified in legend by color.", fig.height=8, fig.width=12, message=TRUE, warning=FALSE}
+```{r Spring OS-NS Zoop Taxa Average Biomass Barplot , fig.cap="Figure 6. Spring Zoop taxa offshore (OS) vs. nearshore (NS) average biomass (mg dry wt per m^3^). Error bars represent standard errors of the means. Taxa groups are identified in legend by color.", fig.height=8, fig.width=12, message=TRUE, warning=FALSE}
 
 # Zoop Taxa Summary Stats Summer Filter
 All_Taxa_Sum_Stats_Spring <- All_Taxa_Sum_Stats %>%  
