@@ -150,9 +150,9 @@ For the nearshore stations, the six northern stations generally have less overal
 
 ![Figure 5. Summer Zoop taxa offshore (OS) vs. nearshore (NS) average biomass (mg dry wt per m^3^). Error bars represent standard errors of the means. Taxa groups are identified in legend by color.](Ontario-2023-Nearshore-Rotifers_files/figure-docx/Summer OS-NS Zoop Taxa Average Biomass Barplot-1.png)
 
-## Zoop Taxa Summer Offshore-Nearshore Biomass Barplot
+## Zoop Taxa Spring Offshore-Nearshore Biomass Barplot
 
-![Figure 6. Summer Zoop taxa offshore (OS) vs. nearshore (NS) average biomass (mg dry wt per m^3^). Error bars represent standard errors of the means. Taxa groups are identified in legend by color.](Ontario-2023-Nearshore-Rotifers_files/figure-docx/Summer OS-NS Zoop Taxa Average Biomass Barplot -1.png)
+![Figure 6. Spring Zoop taxa offshore (OS) vs. nearshore (NS) average biomass (mg dry wt per m^3^). Error bars represent standard errors of the means. Taxa groups are identified in legend by color.](Ontario-2023-Nearshore-Rotifers_files/figure-docx/Spring OS-NS Zoop Taxa Average Biomass Barplot -1.png)
 
 ## Zoop Summer Taxa Station Total Biomass Barplot
 
