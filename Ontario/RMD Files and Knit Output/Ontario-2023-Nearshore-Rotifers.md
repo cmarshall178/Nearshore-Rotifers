@@ -1,7 +1,7 @@
 ---
 title: "Ontario 2023 Nearshore Rotifers"
 author: "Chris Marshall"
-date: "2026-01-08"
+date: "2026-01-09"
 output: 
   word_document: 
     fig_width: 12
@@ -59,7 +59,7 @@ Marshall, C.C., Watkins, J.M., Connolly, J.K., Boynton, P.V., Schaefer, S.L., Cu
 
 ## Rotifer Genera Summer Offshore-Nearshore Biomass Barplot
 
-![Figure 1. Summer Rotifer genera offshore (OS) vs. nearshore (NS) average biomass (mg dry wt per m^3^). Error bars represent standard errors of the means. Taxa groups are identified in legend by color.](Ontario-2023-Nearshore-Rotifers_files/figure-docx/Summer OS-NS Rotifer Genera Average Biomass Barplot-1.png)
+![Figure 1A. Summer Rotifer genera offshore (OS) vs. nearshore (NS) average biomass (mg dry wt per m^3^). Error bars represent standard errors of the means. Taxa groups are identified in legend by color.](Ontario-2023-Nearshore-Rotifers_files/figure-docx/Summer OS-NS Rotifer Genera Average Biomass Barplot-1.png)
 
 This Figure 1 shows a focused look at the 11 taxa encountered between the nearshore and offshore samples for Lake Ontario in August 2023. With several exceptions, most rotifer taxa exhibited higher average biomass values in the offshore samples, suggesting that these waters supported higher densities and perhaps larger taxa compared to shallower habitats. One exception to this were *Trichocerca*, which had a higher biomass in the nearshore vs. offshore, and can be attributed to the higher nutrient concentrations found in nearshore waters supporting a greater density of these eutrophic-loving taxa (Gannon and Stemberger 1978; Sládecek, 1983). *Gastropus* were the remaining taxa to show a slight preference for the nearshore waters. *Synchaeta* and *Ascomorpha* were taxa that exhibited very similar biomass values between near- and offshore waters. These insights suggest that despite higher food concentrations in nearshore habitats, only several taxa gain a clear advantage in these conditions.
 
@@ -89,9 +89,17 @@ Sládecek, V., 1983. Rotifers as indicators of water quality. Hydrobiologia 100,
 
 Stemberger, R.S., 1979. A guide to the rotifers of the Laurentian Great Lakes. Report No. EPA-600/4-79-021. U.S. EPA Environmental Monitoring and Support Laboratory, Cincinnati, 1–200 pp.
 
+## Rotifer Genera Summer Offshore-Nearshore Density Barplot
+
+![Figure 1B. Summer Rotifer genera offshore (OS) vs. nearshore (NS) average density (# per m^3^). Error bars represent standard errors of the means. Taxa groups are identified in legend by color.](Ontario-2023-Nearshore-Rotifers_files/figure-docx/Summer OS-NS Rotifer Genera Average Density Barplot-1.png)
+
 ## Rotifer Genera Spring Offshore-Nearshore Biomass Barplot
 
-![Figure 2. Spring Rotifer genera offshore (OS) vs. nearshore (NS) average biomass (mg dry wt per m^3^). Error bars represent standard errors of the means. Taxa groups are identified in legend by color.](Ontario-2023-Nearshore-Rotifers_files/figure-docx/Spring OS-NS Rotifer Genera Average Biomass-1.png)
+![Figure 2A. Spring Rotifer genera offshore (OS) vs. nearshore (NS) average biomass (mg dry wt per m^3^). Error bars represent standard errors of the means. Taxa groups are identified in legend by color.](Ontario-2023-Nearshore-Rotifers_files/figure-docx/Spring OS-NS Rotifer Genera Average Biomass-1.png)
+
+## Rotifer Genera Spring Offshore-Nearshore Density Barplot
+
+![Figure 2B. Spring Rotifer genera offshore (OS) vs. nearshore (NS) average density (# per m^3^). Error bars represent standard errors of the means. Taxa groups are identified in legend by color.](Ontario-2023-Nearshore-Rotifers_files/figure-docx/Spring OS-NS Rotifer Genera Average Density-1.png)
 
 ## Rotifer Genera Summer Offshore-Nearshore Biomass Boxplot
 
@@ -134,7 +142,7 @@ Stemberger, R.S., 1979. A guide to the rotifers of the Laurentian Great Lakes. R
 
 ## Rotifer Summer Genera Station Total Biomass Barplot
 
-![Figure 3. Summer Rotifer genera station total biomass (mg dry wt per m^3^) for shallow tows at the eight offshore LTM sites, six CSMI nearshore sites along the north shore, and seven CSMI nearshore sites along the south shore.](Ontario-2023-Nearshore-Rotifers_files/figure-docx/OS-NS Summer Rotifer Genera Station Biomass-1.png)
+![Figure 3A. Summer Rotifer genera station total biomass (mg dry wt per m^3^) for shallow tows at the eight offshore LTM sites, six CSMI nearshore sites along the north shore, and seven CSMI nearshore sites along the south shore.](Ontario-2023-Nearshore-Rotifers_files/figure-docx/OS-NS Summer Rotifer Genera Station Biomass-1.png)
 
 This Figure 2 shows a comparsion between rotifer assemblages in the eight offshore and thirteen nearshore stations collected in Lake Ontario during August 2023. The three western offshore stations exhibited higher biomass values compared with the eastern portion of the lake, and the differences are primaritly attributed to higher *Asplanchna* and *Conochilus* contributions. Additionally, the biomass of *Keratella*, *Kellicottia*, and *Collotheca* are notably higher in the western stations, likely associated with lower TP concentrations promoting taxa associated with more oligotrophic-like conditions (Barbiero and Warren, 2011; Marshall et al., 2024). Another notable difference is higher *Polyarthra* biomass in the five eastern stations, with the highest values at the easternmost station, indicating higher TP values and/or decreased predation pressures by *Cercopagis pengoi.*
 
@@ -142,9 +150,17 @@ For the nearshore stations, the six northern stations generally have less overal
 
 [References:]{.underline}
 
+## Rotifer Summer Genera Station Total Density Barplot
+
+![Figure 3B Summer Rotifer genera station total density (# per m^3^) for shallow tows at the eight offshore LTM sites, six CSMI nearshore sites along the north shore, and seven CSMI nearshore sites along the south shore.](Ontario-2023-Nearshore-Rotifers_files/figure-docx/OS-NS Summer Rotifer Genera Station Desnity-1.png)
+
 ## Rotifer Spring Genera Station Total Biomass Barplot
 
-![Figure 4. Spring Rotifer genera station total biomass (mg dry wt per m^3^) for shallow tows at the eight offshore LTM sites, six CSMI nearshore sites along the north shore, and seven CSMI nearshore sites along the south shore.](Ontario-2023-Nearshore-Rotifers_files/figure-docx/OS-NS Spring Rotifer Genera Station Biomass-1.png)
+![Figure 4A. Spring Rotifer genera station total biomass (mg dry wt per m^3^) for shallow tows at the eight offshore LTM sites, five CSMI nearshore sites along the north shore, and four CSMI nearshore sites along the south shore.](Ontario-2023-Nearshore-Rotifers_files/figure-docx/OS-NS Spring Rotifer Genera Station Biomass-1.png)
+
+## Rotifer Spring Genera Station Total Density Barplot
+
+![Figure 4B. Spring Rotifer genera station total density (# per m^3^) for shallow tows at the eight offshore LTM sites, five CSMI nearshore sites along the north shore, and four CSMI nearshore sites along the south shore.](Ontario-2023-Nearshore-Rotifers_files/figure-docx/OS-NS Spring Rotifer Genera Station Density-1.png)
 
 ## Zoop Taxa Summer Offshore-Nearshore Biomass Barplot
 
@@ -160,5 +176,5 @@ For the nearshore stations, the six northern stations generally have less overal
 
 ## Zoop Spring Taxa Station Total Biomass Barplot
 
-![Figure 8. Spring Zoop taxa station total biomass (mg dry wt per m^3^) for shallow tows at the eight offshore LTM sites, six CSMI nearshore sites along the north shore, and seven CSMI nearshore sites along the south shore.](Ontario-2023-Nearshore-Rotifers_files/figure-docx/OS-NS Spring Zoop Taxa Station Biomass-1.png)
+![Figure 8. Spring Zoop taxa station total biomass (mg dry wt per m^3^) for shallow tows at the eight offshore LTM sites, five CSMI nearshore sites along the north shore, and four CSMI nearshore sites along the south shore.](Ontario-2023-Nearshore-Rotifers_files/figure-docx/OS-NS Spring Zoop Taxa Station Biomass-1.png)
 
