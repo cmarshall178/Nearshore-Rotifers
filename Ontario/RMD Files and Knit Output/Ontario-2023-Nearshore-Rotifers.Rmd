@@ -66,17 +66,17 @@ library(ade4)
 ```
 
 ```{r Dataframe Importing; Ontario 2023 D20 counts and sample metadata, message=FALSE, warning=FALSE, include=FALSE}
-Ontario_2023_D20_Counts <- read_excel("C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Nearshore-Rotifers/Ontario/Raw Data/ZOOP_DATA_2023 NS Ontario_251120.xlsx",
+Ontario_2023_D20_Counts <- read_excel("C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Rotifer Projects/Nearshore-Rotifers/Ontario/Raw Data/ZOOP_DATA_2023 NS Ontario_251120.xlsx",
         sheet = "OS count") %>%
           mutate("Type" = "OS")
-Ontario_2023_D20_Sample <- read_excel("C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Nearshore-Rotifers/Ontario/Raw Data/ZOOP_DATA_2023 NS Ontario_251120.xlsx",
+Ontario_2023_D20_Sample <- read_excel("C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Rotifer Projects/Nearshore-Rotifers/Ontario/Raw Data/ZOOP_DATA_2023 NS Ontario_251120.xlsx",
         sheet = "OS sample")
 
 # Ontario 2023 Nearshore counts and sample metadata
-Ontario_2023_Nearshore_Counts <- read_excel("C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Nearshore-Rotifers/Ontario/Raw Data/ZOOP_DATA_2023 NS Ontario_251120.xlsx",
+Ontario_2023_Nearshore_Counts <- read_excel("C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Rotifer Projects/Nearshore-Rotifers/Ontario/Raw Data/ZOOP_DATA_2023 NS Ontario_251120.xlsx",
         sheet = "NS count") %>%
           mutate("Type" = "NS")
-Ontario_2023_Nearshore_Sample <- read_excel("C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Nearshore-Rotifers/Ontario/Raw Data/ZOOP_DATA_2023 NS Ontario_251120.xlsx",
+Ontario_2023_Nearshore_Sample <- read_excel("C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Rotifer Projects/Nearshore-Rotifers/Ontario/Raw Data/ZOOP_DATA_2023 NS Ontario_251120.xlsx",
         sheet = "NS sample")
 ```
 
@@ -91,7 +91,7 @@ Ontario_2023_Meta_Join <- full_join(Ontario_2023_D20_Sample, Ontario_2023_Nearsh
 Ontario_2023_Joined <- Ontario_2023_Full_Data %>%
   left_join(select(Ontario_2023_Meta_Join, "Sample ID", "Basin", "Season", "D or N", "Site Depth", "Lat", "Lon"), by = "Sample ID")
 
-write_csv(Ontario_2023_Joined, file = "C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Nearshore-Rotifers/Ontario/Processed Data/Ontario_2023_Joined.csv")
+write_csv(Ontario_2023_Joined, file = "C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Rotifer Projects/Nearshore-Rotifers/Ontario/Processed Data/Ontario_2023_Joined.csv")
 
 #Summarise count data and complete with implicit zeros for each Speccode; fill group and type columns with appropriate metadata
 Ontario_2023_Complete <- Ontario_2023_Joined %>%
@@ -189,7 +189,7 @@ Zoop_Taxa <- rep("NA", Group_Length)
 # Binding the Zoop_Taxa variable created with for loop as a column to the original dataframe
 Ontario_2023_Complete <- cbind(Ontario_2023_Complete, Zoop_Taxa)
 
-write_csv(Ontario_2023_Complete, file = "C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Nearshore-Rotifers/Ontario/Processed Data/Ontario_2023_Complete.csv")
+write_csv(Ontario_2023_Complete, file = "C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Rotifer Projects/Nearshore-Rotifers/Ontario/Processed Data/Ontario_2023_Complete.csv")
 ```
 
 ```{r Zoop and Rotifer Data Summaries, echo=FALSE, message=FALSE, warning=FALSE, include=FALSE}
@@ -212,7 +212,7 @@ All_Speccode_Sum_Stats <- Ontario_2023_Complete %>%
       All_Den_SE_m3 = All_Den_SD_m3 / sqrt(N),
       All_Bio_SE_m2 = All_Bio_SD_m2 / sqrt(N))
 
-write_csv(All_Speccode_Sum_Stats, file = "C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Nearshore-Rotifers/Ontario/Processed Data/All_Speccode_Sum_Stats.csv")
+write_csv(All_Speccode_Sum_Stats, file = "C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Rotifer Projects/Nearshore-Rotifers/Ontario/Processed Data/All_Speccode_Sum_Stats.csv")
 
 # Summarize all group volumetric data by taxa
 All_Taxa_Sum_Stats <- Ontario_2023_Complete %>%
@@ -232,7 +232,7 @@ All_Taxa_Sum_Stats <- Ontario_2023_Complete %>%
       All_Den_SE_m3 = All_Den_SD_m3 / sqrt(N),
       All_Bio_SE_m2 = All_Bio_SD_m2 / sqrt(N))
 
-write_csv(All_Taxa_Sum_Stats, file = "C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Nearshore-Rotifers/Ontario/Processed Data/All_Taxa_Sum_Stats.csv")
+write_csv(All_Taxa_Sum_Stats, file = "C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Rotifer Projects/Nearshore-Rotifers/Ontario/Processed Data/All_Taxa_Sum_Stats.csv")
 
 #kable(All_Speccode_Sum_Stats)
 
@@ -254,7 +254,7 @@ Rot_Speccode_Sum_Stats <- Ontario_2023_Complete %>%
     All_Den_SE_m3 = All_Den_SD_m3 / sqrt(N),
     All_Bio_SE_m2 = All_Bio_SD_m2 / sqrt(N))
 
-write_csv(Rot_Speccode_Sum_Stats, file = "C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Nearshore-Rotifers/Ontario/Processed Data/Rot_Speccode_Sum_Stats.csv")
+write_csv(Rot_Speccode_Sum_Stats, file = "C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Rotifer Projects/Nearshore-Rotifers/Ontario/Processed Data/Rot_Speccode_Sum_Stats.csv")
 
 # Summarize rotifer volumetric data by Rot_GENERA
 Rot_Genera_Sum_Stats <- Ontario_2023_Complete %>%
@@ -274,7 +274,7 @@ Rot_Genera_Sum_Stats <- Ontario_2023_Complete %>%
     All_Den_SE_m3 = All_Den_SD_m3 / sqrt(N),
     All_Bio_SE_m2 = All_Bio_SD_m2 / sqrt(N))
 
-write_csv(Rot_Genera_Sum_Stats, file = "C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Nearshore-Rotifers/Ontario/Processed Data/Rot_Genera_Sum_Stats.csv")
+write_csv(Rot_Genera_Sum_Stats, file = "C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Rotifer Projects/Nearshore-Rotifers/Ontario/Processed Data/Rot_Genera_Sum_Stats.csv")
 
 # Summarize all rotifer volumetric data by Rot_GENERA for Stations
 Rotifer_Full_Stations <- Ontario_2023_Complete %>%
@@ -294,7 +294,7 @@ Rotifer_Full_Stations <- Ontario_2023_Complete %>%
     All_Den_SE_m3 = All_Den_SD_m3 / sqrt(N),
     All_Bio_SE_m2 = All_Bio_SD_m2 / sqrt(N))
 
-write_csv(Rotifer_Full_Stations, file = "C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Nearshore-Rotifers/Ontario/Processed Data/Rotifer_Full_Stations.csv")
+write_csv(Rotifer_Full_Stations, file = "C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Rotifer Projects/Nearshore-Rotifers/Ontario/Processed Data/Rotifer_Full_Stations.csv")
 
 #We used an Analysis of Variance (ANOVA) approach to determine whether there were significant differences of the means of the four groups in terms of overall biomass.  Welch’s t-tests were then run for comparison of each group considering different sample sizes. 
 ```
