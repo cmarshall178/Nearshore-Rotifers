@@ -344,6 +344,17 @@ Rotifer_Full_Stations <- Erie_2024_Complete %>%
 
 write_csv(Rotifer_Full_Stations, file = "C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Rotifer Projects/Nearshore-Rotifers/Erie/Data/Processed/Rotifer_Full_Stations.csv")
 
+# Summarize all rotifer volumetric data by Species for Stations
+Rotifer_Species_Full_Stations <- Erie_2024_Complete %>%
+  filter(Group == "ROT") %>%
+   filter(str_starts(Station, "ER")) %>%
+  group_by(Species, Station, Type, Season, Basin) %>%
+    summarise(All_Bio_SUM_m3 = sum(Zoop_Bio_Sum_m3),
+    All_Den_SUM_m3 = sum(Zoop_Den_Sum_m3),
+    All_Bio_SUM_m2 = sum(Zoop_Bio_Sum_m2))
+
+write_csv(Rotifer_Species_Full_Stations, file = "C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Rotifer Projects/Nearshore-Rotifers/Erie/Data/Processed/Rotifer_Species_Full_Stations.csv")
+
 #We used an Analysis of Variance (ANOVA) approach to determine whether there were significant differences of the means of the four groups in terms of overall biomass.  Welch’s t-tests were then run for comparison of each group considering different sample sizes. 
 ```
 
@@ -396,15 +407,15 @@ View(rot_pa_final)
 # Export
 write_csv(
   rot_pa_final,
-  "C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Rotifer Projects/Nearshore-Rotifers/Erie/Output/Tables/Rotifer_Presence_Absence_By_Basin.csv"
+  "C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Rotifer Projects/Nearshore-Rotifers/Erie/Output/Tables/Genus/Rotifer_Genus_Presence_Absence_By_Basin.csv"
 )
 ```
 
 
 ```{r Rotifer Species Matrix Summaries without stations, echo=FALSE, message=FALSE, warning=FALSE, include=FALSE}
-# Presence-Absence Rotifer Genera Table by Genera, Type, Season, Basin
-#12 sampling groups (rows)
-#27 rotifer genera (columns)
+# Presence-Absence Rotifer Species Table by Species, Type, Season, Basin
+# sampling groups (rows)
+# rotifer genera (columns)
 #1 = present in at least one station within the group
 #0 = absent from all stations within the group
 
@@ -450,60 +461,7 @@ View(rot_pa_final)
 # Export
 write_csv(
   rot_pa_final,
-  "C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Rotifer Projects/Nearshore-Rotifers/Erie/Output/Tables/Rotifer_Presence_Absence_By_Basin.csv"
-)
-```
-
-```{r Rotifer Species Matrix Summaries without stations, echo=FALSE, message=FALSE, warning=FALSE, include=FALSE}
-# Presence-Absence Rotifer Genera Table by Genera, Type, Season, Basin
-# sampling groups (rows)
-# rotifer genera (columns)
-#1 = present in at least one station within the group
-#0 = absent from all stations within the group
-
-# Aggregate across grouping variables - No stations
-rot_abundance <- Rotifer_Full_Stations %>%
-  group_by(Type, Season, Basin, Rot_GENERA) %>%
-  summarise(
-    Abundance = sum(All_Den_SUM_m3, na.rm = TRUE),
-    .groups = "drop"
-  )
-
-# Convert to wide format
-rot_pa <- rot_abundance %>%
-  pivot_wider(
-    names_from = Rot_GENERA,
-    values_from = Abundance,
-    values_fill = 0
-  )
-
-# Separate grouping variables
-rot_metadata <- rot_pa %>%
-  select(Type, Season, Basin)
-
-# Create presence-absence matrix
-rot_matrix <- rot_pa %>%
-  select(-Type, -Season, -Basin) %>%
-  as.data.frame()
-
-rot_matrix <- vegan::decostand(
-  rot_matrix,
-  method = "pa"
-)
-
-# Combine metadata and presence-absence matrix
-rot_pa_final <- bind_cols(
-  rot_metadata,
-  as.data.frame(rot_matrix)
-)
-
-# View results
-View(rot_pa_final)
-
-# Export
-write_csv(
-  rot_pa_final,
-  "C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Rotifer Projects/Nearshore-Rotifers/Erie/Output/Tables/Rotifer_Presence_Absence_By_Basin.csv"
+  "C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Rotifer Projects/Nearshore-Rotifers/Erie/Output/Tables/Species/Rotifer_Species_Presence_Absence_By_Basin.csv"
 )
 ```
 
@@ -559,7 +517,7 @@ diversity_results <- sample_metadata %>%
     )
   )
 
-write_csv(diversity_results, "C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Rotifer Projects/Nearshore-Rotifers/Erie/Output/Tables/Rotifer_Station_Level_Diversity.csv")
+write_csv(diversity_results, "C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Rotifer Projects/Nearshore-Rotifers/Erie/Output/Tables/Genus/Rotifer_Genus_Station_Level_Diversity.csv")
 
 # Optional summaries by season, type, and basin
 diversity_summary <- diversity_results %>%
@@ -575,7 +533,7 @@ diversity_summary <- diversity_results %>%
     .groups = "drop"
   )
 
-write_csv(diversity_summary, "C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Rotifer Projects/Nearshore-Rotifers/Erie/Output/Tables/Rotifer_Diversity_Summary.csv")
+write_csv(diversity_summary, "C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Rotifer Projects/Nearshore-Rotifers/Erie/Output/Tables/Genus/Rotifer_Genus_Diversity_Summary.csv")
 
 # 3. Bray-Curtis dissimilarity
 # Relative abundance is used here so the comparison emphasizes genus
@@ -587,7 +545,7 @@ bray_curtis <- vegan::vegdist(
 )
 
 bray_matrix <- as.matrix(bray_curtis)
-write.csv(bray_matrix, "C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Rotifer Projects/Nearshore-Rotifers/Erie/Output/Tables/Rotifer_Bray_Curtis_Dissimilarity.csv")
+write.csv(bray_matrix, "C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Rotifer Projects/Nearshore-Rotifers/Erie/Output/Tables/Genus/Rotifer_Genus_Bray_Curtis_Dissimilarity.csv")
 
 # 4. Non-metric multidimensional scaling (NMDS)
 set.seed(123)
@@ -603,7 +561,7 @@ rot_nmds <- vegan::metaMDS(
 # Save sample scores with metadata
 nmds_scores <- as.data.frame(vegan::scores(rot_nmds, display = "sites"))
 nmds_scores <- bind_cols(sample_metadata, nmds_scores)
-write_csv(nmds_scores, "C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Rotifer Projects/Nearshore-Rotifers/Erie/Output/Tables/Rotifer_NMDS_Scores.csv")
+write_csv(nmds_scores, "C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Rotifer Projects/Nearshore-Rotifers/Erie/Output/Tables/Genus/Rotifer_Genus_NMDS_Scores.csv")
 
 # NMDS plot: shape = season, color = basin, facet = type
 nmds_plot <- ggplot(
@@ -625,7 +583,7 @@ nmds_plot <- ggplot(
   )
 
 nmds_plot
-ggsave("C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Rotifer Projects/Nearshore-Rotifers/Erie/Output/Figures/Rotifer_NMDS.png", nmds_plot, width = 9, height = 6, dpi = 300)
+ggsave("C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Rotifer Projects/Nearshore-Rotifers/Erie/Output/Figures/Rotifer_Genus_NMDS.png", nmds_plot, width = 9, height = 6, dpi = 300)
 
 # 5. Optional PERMANOVA for exploratory group comparisons
 # Caution: stations are sampled in both seasons. The unblocked model below
@@ -637,7 +595,7 @@ permanova <- vegan::adonis2(
   permutations = 999,
   by = "margin"
 )
-capture.output(permanova, file = "C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Rotifer Projects/Nearshore-Rotifers/Erie/Output/Tables/Rotifer_PERMANOVA.txt")
+capture.output(permanova, file = "C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Rotifer Projects/Nearshore-Rotifers/Erie/Output/Tables/Genus/Rotifer_Genus_PERMANOVA.txt")
 
 # 6. Check homogeneity of multivariate dispersion before interpreting
 # PERMANOVA group differences. Example: dispersion among Basin groups.
@@ -647,15 +605,162 @@ basin_dispersion_test <- vegan::permutest(
   permutations = 999
 )
 capture.output(basin_dispersion_test,
-               file = "C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Rotifer Projects/Nearshore-Rotifers/Erie/Output/Tables/Rotifer_Basin_Dispersion_Test.txt")
+               file = "C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Rotifer Projects/Nearshore-Rotifers/Erie/Output/Tables/Genus/Rotifer_Genus_Basin_Dispersion_Test.txt")
 
 # Save NMDS model diagnostics
 capture.output(
   list(stress = rot_nmds$stress, convergence = rot_nmds$converged),
-  file = "C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Rotifer Projects/Nearshore-Rotifers/Erie/Output/Tables/Rotifer_NMDS_Diagnostics.txt"
+  file = "C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Rotifer Projects/Nearshore-Rotifers/Erie/Output/Tables/Genus/Rotifer_Genus/NMDS_Diagnostics.txt"
 )
 ```
+```{r Rotifer Species Matrix Summaries with stations, echo=FALSE, message=FALSE, warning=FALSE, include=FALSE}
+# 1. Import and prepare station-level abundance matrix
+# Create abundance data grouped by stations and rotifer species and other variables
+rot_abundance_stations <- Rotifer_Species_Full_Stations %>%
+  group_by(Station, Type, Season, Basin, Species) %>%
+  summarise(
+    Abundance = sum(All_Den_SUM_m3, na.rm = TRUE),
+    .groups = "drop"
+  )
 
+# Convert abundance data into a wide community matrix
+rot_pa_stations <- rot_abundance_stations %>%
+  pivot_wider(
+    names_from = Species,
+    values_from = Abundance,
+    values_fill = 0
+  ) %>%
+  arrange(Station, Type, Season, Basin)
+
+# Convert abundance values to presence (1) / absence (0)
+# Keep the grouping variables separate from the community matrix
+sample_metadata <- rot_pa_stations %>%
+  select(Station, Type, Season, Basin)
+
+rot_pa_matrix_stations <- rot_pa_stations %>%
+  select(-Station, -Type, -Season, -Basin) %>%
+  as.data.frame()
+
+# Ensure numeric matrix and non-negative values
+rot_pa_matrix_stations <- as.matrix(data.frame(lapply(rot_pa_matrix_stations, as.numeric)))
+rownames(rot_pa_matrix_stations) <- make.unique(
+  paste(sample_metadata$Station, sample_metadata$Type,
+        sample_metadata$Season, sample_metadata$Basin, sep = "_")
+)
+
+# 2. Station-level richness and diversity
+# Richness is the number of genera with abundance > 0.
+# Shannon and Simpson indices use abundance, not just presence/absence.
+diversity_results <- sample_metadata %>%
+  mutate(
+    Total_Density = rowSums(rot_pa_matrix_stations),
+    Genus_Richness = vegan::specnumber(rot_pa_matrix_stations),
+    Shannon_H = vegan::diversity(rot_pa_matrix_stations, index = "shannon"),
+    Simpson_1_minus_D = vegan::diversity(rot_pa_matrix_stations, index = "simpson"),
+    Inverse_Simpson = vegan::diversity(rot_pa_matrix_stations, index = "invsimpson"),
+    Pielou_Evenness = ifelse(
+      Genus_Richness > 1,
+      Shannon_H / log(Genus_Richness),
+      NA_real_
+    )
+  )
+
+write_csv(diversity_results, "C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Rotifer Projects/Nearshore-Rotifers/Erie/Output/Tables/Species/Rotifer_Station_Species_Diversity.csv")
+
+# Optional summaries by season, type, and basin
+diversity_summary <- diversity_results %>%
+  group_by(Type, Season, Basin) %>%
+  summarise(
+    n = n(),
+    Mean_Richness = mean(Genus_Richness, na.rm = TRUE),
+    SD_Richness = sd(Genus_Richness, na.rm = TRUE),
+    Mean_Shannon = mean(Shannon_H, na.rm = TRUE),
+    SD_Shannon = sd(Shannon_H, na.rm = TRUE),
+    Mean_Simpson = mean(Simpson_1_minus_D, na.rm = TRUE),
+    SD_Simpson = sd(Simpson_1_minus_D, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+write_csv(diversity_summary, "C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Rotifer Projects/Nearshore-Rotifers/Erie/Output/Tables/Species/Rotifer_Species_Diversity_Summary.csv")
+
+# 3. Bray-Curtis dissimilarity
+# Relative abundance is used here so the comparison emphasizes genus
+# composition rather than differences in total density among samples.
+rot_pa_matrix_stations_relative <- vegan::decostand(rot_pa_matrix_stations, method = "total")
+bray_curtis <- vegan::vegdist(
+  rot_pa_matrix_stations_relative,
+  method = "bray"
+)
+
+bray_matrix <- as.matrix(bray_curtis)
+write.csv(bray_matrix, "C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Rotifer Projects/Nearshore-Rotifers/Erie/Output/Tables/Species/Rotifer_Species_Bray_Curtis_Dissimilarity.csv")
+
+# 4. Non-metric multidimensional scaling (NMDS)
+set.seed(123)
+rot_nmds <- vegan::metaMDS(
+  rot_pa_matrix_stations_relative,
+  distance = "bray",
+  k = 2,
+  trymax = 200,
+  autotransform = FALSE,
+  trace = 1
+)
+
+# Save sample scores with metadata
+nmds_scores <- as.data.frame(vegan::scores(rot_nmds, display = "sites"))
+nmds_scores <- bind_cols(sample_metadata, nmds_scores)
+write_csv(nmds_scores, "C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Rotifer Projects/Nearshore-Rotifers/Erie/Output/Tables/Species/Rotifer_Species_NMDS_Scores.csv")
+
+# NMDS plot: shape = season, color = basin, facet = type
+nmds_plot <- ggplot(
+  nmds_scores,
+  aes(x = NMDS1, y = NMDS2, color = Basin, shape = Season)
+) +
+  geom_point(size = 3, alpha = 0.85) +
+  stat_ellipse(aes(group = interaction(Basin, Season)),
+               linewidth = 0.5, linetype = 2,
+               show.legend = FALSE, na.rm = TRUE) +
+  facet_wrap(~ Type) +
+  theme_bw() +
+  labs(
+    title = "Rotifer community composition by station",
+    subtitle = paste("Bray-Curtis NMDS; stress =",
+                     round(rot_nmds$stress, 3)),
+    color = "Basin",
+    shape = "Season"
+  )
+
+nmds_plot
+ggsave("C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Rotifer Projects/Nearshore-Rotifers/Erie/Output/Figures/Rotifer_Species_NMDS.png", nmds_plot, width = 9, height = 6, dpi = 300)
+
+# 5. Optional PERMANOVA for exploratory group comparisons
+# Caution: stations are sampled in both seasons. The unblocked model below
+# treats rows as independent and should be interpreted cautiously.
+# For formal inference, account for repeated station sampling and study design.
+permanova <- vegan::adonis2(
+  bray_curtis ~ Type * Season * Basin,
+  data = sample_metadata,
+  permutations = 999,
+  by = "margin"
+)
+capture.output(permanova, file = "C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Rotifer Projects/Nearshore-Rotifers/Erie/Output/Tables/Species/Rotifer_Species_PERMANOVA.txt")
+
+# 6. Check homogeneity of multivariate dispersion before interpreting
+# PERMANOVA group differences. Example: dispersion among Basin groups.
+basin_dispersion <- vegan::betadisper(bray_curtis, sample_metadata$Basin)
+basin_dispersion_test <- vegan::permutest(
+  basin_dispersion,
+  permutations = 999
+)
+capture.output(basin_dispersion_test,
+               file = "C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Rotifer Projects/Nearshore-Rotifers/Erie/Output/Tables/Species/Rotifer_Species_Basin_Dispersion_Test.txt")
+
+# Save NMDS model diagnostics
+capture.output(
+  list(stress = rot_nmds$stress, convergence = rot_nmds$converged),
+  file = "C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Rotifer Projects/Nearshore-Rotifers/Erie/Output/Tables/Species/Rotifer_Species_NMDS_Diagnostics.txt"
+)
+```
 
 ```{r ANOVA and Linear Model Statistics, echo=FALSE, message=FALSE, warning=FALSE, include=FALSE}
 
