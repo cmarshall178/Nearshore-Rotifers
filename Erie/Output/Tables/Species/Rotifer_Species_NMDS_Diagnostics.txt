@@ -1,0 +1,6 @@
+$stress
+[1] 0.0915089
+
+$convergence
+[1] 1
+
