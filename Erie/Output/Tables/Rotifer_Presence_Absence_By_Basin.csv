@@ -1,0 +1,13 @@
+Type,Season,Basin,Ascomorpha,Asplanchna,Brachionus,Cephalodella,Collotheca,Colurella,Conochiloides,Conochilus,Encentrum,Euchlanis,Filinia,Gastropus,Kellicottia,Keratella,Lepadella,Monostyla,Mytilina,Notholca,Notomatta,Ploesoma,Polyarthra,Pompholyx,Proales,Rotifer Bdelloid,Synchaeta,Trichocerca,Trichotria
+NS,Spring,C,0,1,1,1,0,0,0,1,1,0,1,0,1,1,0,0,0,1,1,1,1,0,1,0,1,1,0
+NS,Spring,E,0,1,0,1,0,0,0,1,1,1,1,0,1,1,0,0,1,1,0,0,1,0,0,0,1,0,1
+NS,Spring,W,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,1,0,0,1,0,0,0,1,0,0
+NS,Summer,C,1,1,1,0,1,0,0,1,0,0,0,1,1,1,0,0,0,0,0,1,1,0,0,1,1,1,0
+NS,Summer,E,1,1,0,0,1,0,0,1,0,0,0,1,1,1,1,1,0,0,0,1,1,0,0,1,1,1,1
+NS,Summer,W,1,1,1,0,1,0,1,1,0,0,0,0,0,1,0,0,0,0,0,1,1,1,0,0,1,1,0
+OS,Spring,C,0,0,0,0,0,0,0,1,0,0,0,0,1,1,0,0,0,1,0,0,1,0,0,0,1,0,0
+OS,Spring,E,0,0,0,0,0,1,0,1,0,0,0,0,1,1,0,0,0,1,0,0,1,0,0,0,1,0,0
+OS,Spring,W,0,0,1,1,0,0,0,1,1,1,1,1,1,1,0,1,0,1,1,0,1,1,1,1,1,0,0
+OS,Summer,C,1,1,0,0,1,0,0,1,0,0,0,1,1,1,0,0,0,0,0,1,1,0,0,0,1,1,0
+OS,Summer,E,1,1,0,0,1,0,0,1,0,0,0,1,1,1,0,0,0,0,0,1,1,0,0,0,1,1,0
+OS,Summer,W,1,1,1,0,1,0,1,1,0,0,1,1,1,1,0,0,0,0,0,1,1,0,0,1,1,1,0
