@@ -575,7 +575,7 @@ nmds_plot <- ggplot(
   facet_wrap(~ Type) +
   theme_bw() +
   labs(
-    title = "Rotifer community composition by station",
+    title = "Rotifer Genus composition by station",
     subtitle = paste("Bray-Curtis NMDS; stress =",
                      round(rot_nmds$stress, 3)),
     color = "Basin",
@@ -610,9 +610,10 @@ capture.output(basin_dispersion_test,
 # Save NMDS model diagnostics
 capture.output(
   list(stress = rot_nmds$stress, convergence = rot_nmds$converged),
-  file = "C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Rotifer Projects/Nearshore-Rotifers/Erie/Output/Tables/Genus/Rotifer_Genus/NMDS_Diagnostics.txt"
+  file = "C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Rotifer Projects/Nearshore-Rotifers/Erie/Output/Tables/Genus/Rotifer_Genus_NMDS_Diagnostics.txt"
 )
 ```
+
 ```{r Rotifer Species Matrix Summaries with stations, echo=FALSE, message=FALSE, warning=FALSE, include=FALSE}
 # 1. Import and prepare station-level abundance matrix
 # Create abundance data grouped by stations and rotifer species and other variables
@@ -723,7 +724,7 @@ nmds_plot <- ggplot(
   facet_wrap(~ Type) +
   theme_bw() +
   labs(
-    title = "Rotifer community composition by station",
+    title = "Rotifer Species composition by station",
     subtitle = paste("Bray-Curtis NMDS; stress =",
                      round(rot_nmds$stress, 3)),
     color = "Basin",
