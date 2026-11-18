@@ -543,7 +543,7 @@ bray_curtis <- vegan::vegdist(
   rot_pa_matrix_stations_relative,
   method = "bray"
 )
-
+vegan:decostand(method = )
 bray_matrix <- as.matrix(bray_curtis)
 write.csv(bray_matrix, "C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Rotifer Projects/Nearshore-Rotifers/Erie/Output/Tables/Genus/Rotifer_Genus_Bray_Curtis_Dissimilarity.csv")
 
@@ -566,20 +566,20 @@ write_csv(nmds_scores, "C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Rotifer P
 # NMDS plot: shape = season, color = basin, facet = type
 nmds_plot <- ggplot(
   nmds_scores,
-  aes(x = NMDS1, y = NMDS2, color = Basin, shape = Season)
+  aes(x = NMDS1, y = NMDS2, color = Basin, shape = Type)
 ) +
   geom_point(size = 3, alpha = 0.85) +
-  stat_ellipse(aes(group = interaction(Basin, Season)),
+  stat_ellipse(aes(group = interaction(Season, Basin, Type)),
                linewidth = 0.5, linetype = 2,
                show.legend = FALSE, na.rm = TRUE) +
-  facet_wrap(~ Type) +
+  #facet_wrap(~ Type) +
   theme_bw() +
   labs(
     title = "Rotifer Genus composition by station",
     subtitle = paste("Bray-Curtis NMDS; stress =",
                      round(rot_nmds$stress, 3)),
     color = "Basin",
-    shape = "Season"
+    shape = "Type"
   )
 
 nmds_plot
@@ -715,20 +715,20 @@ write_csv(nmds_scores, "C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Rotifer P
 # NMDS plot: shape = season, color = basin, facet = type
 nmds_plot <- ggplot(
   nmds_scores,
-  aes(x = NMDS1, y = NMDS2, color = Basin, shape = Season)
+  aes(x = NMDS1, y = NMDS2, color = Basin, shape = Type)
 ) +
   geom_point(size = 3, alpha = 0.85) +
-  stat_ellipse(aes(group = interaction(Basin, Season)),
+  stat_ellipse(aes(group = interaction(Season, Basin, Type)),
                linewidth = 0.5, linetype = 2,
                show.legend = FALSE, na.rm = TRUE) +
-  facet_wrap(~ Type) +
+  #facet_wrap(~ Season) +
   theme_bw() +
   labs(
     title = "Rotifer Species composition by station",
     subtitle = paste("Bray-Curtis NMDS; stress =",
                      round(rot_nmds$stress, 3)),
     color = "Basin",
-    shape = "Season"
+    shape = "Type"
   )
 
 nmds_plot
