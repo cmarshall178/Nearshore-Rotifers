@@ -538,12 +538,12 @@ write_csv(diversity_summary, "C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Rot
 # 3. Bray-Curtis dissimilarity
 # Relative abundance is used here so the comparison emphasizes genus
 # composition rather than differences in total density among samples.
-rot_pa_matrix_stations_relative <- vegan::decostand(rot_pa_matrix_stations, method = "total")
+rot_pa_matrix_stations_relative <- vegan::decostand(rot_pa_matrix_stations, method = "hellinger")
 bray_curtis <- vegan::vegdist(
   rot_pa_matrix_stations_relative,
   method = "bray"
 )
-vegan:decostand(method = )
+
 bray_matrix <- as.matrix(bray_curtis)
 write.csv(bray_matrix, "C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Rotifer Projects/Nearshore-Rotifers/Erie/Output/Tables/Genus/Rotifer_Genus_Bray_Curtis_Dissimilarity.csv")
 
@@ -685,9 +685,9 @@ diversity_summary <- diversity_results %>%
 write_csv(diversity_summary, "C:/Users/cmars/OneDrive/Desktop/CCM Work Files/Rotifer Projects/Nearshore-Rotifers/Erie/Output/Tables/Species/Rotifer_Species_Diversity_Summary.csv")
 
 # 3. Bray-Curtis dissimilarity
-# Relative abundance is used here so the comparison emphasizes genus
+# Relative abundance is used here so the comparison emphasizes species
 # composition rather than differences in total density among samples.
-rot_pa_matrix_stations_relative <- vegan::decostand(rot_pa_matrix_stations, method = "total")
+rot_pa_matrix_stations_relative <- vegan::decostand(rot_pa_matrix_stations, method = "hellinger")
 bray_curtis <- vegan::vegdist(
   rot_pa_matrix_stations_relative,
   method = "bray"

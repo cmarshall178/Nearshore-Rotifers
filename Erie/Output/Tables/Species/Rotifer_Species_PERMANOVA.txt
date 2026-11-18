@@ -5,8 +5,8 @@ Number of permutations: 999
 
 vegan::adonis2(formula = bray_curtis ~ Type * Season * Basin, data = sample_metadata, permutations = 999, by = "margin")
                   Df SumOfSqs      R2      F Pr(>F)  
-Type:Season:Basin  2   0.3268 0.01943 2.5685  0.026 *
-Residual          52   3.3076 0.19668                
-Total             63  16.8174 1.00000                
+Type:Season:Basin  2   0.2686 0.02125 2.6411  0.019 *
+Residual          52   2.6446 0.20921                
+Total             63  12.6407 1.00000                
 ---
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
